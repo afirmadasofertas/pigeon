@@ -1,0 +1,32 @@
+{
+  "name": "pigeonlp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@21st-sdk/agent": "latest",
+    "@21st-sdk/nextjs": "latest",
+    "@21st-sdk/node": "latest",
+    "@21st-sdk/react": "latest",
+    "@ai-sdk/react": "latest",
+    "@studio-freight/lenis": "^1.0.42",
+    "ai": "latest",
+    "next": "^15",
+    "react": "^19",
+    "react-dom": "^19",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5",
+    "uipro-cli": "^2.2.3"
+  }
+}

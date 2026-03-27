@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PigeonPag — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       PIGEON DESIGN SYSTEM — TOKENS
+       ============================================================ */
+    :root {
+      /* Background */
+      --bg-base:        #000D18;
+      --bg-surface:     #010F22;
+      --bg-elevated:    #061829;
+      --bg-overlay:     #0A1F35;
+      --bg-hover:       rgba(22, 106, 253, 0.06);
+
+      /* Brand */
+      --blue-500:       #166AFD;
+      --blue-400:       #3D84FE;
+      --blue-300:       #6EA3FF;
+      --blue-200:       #B7D6FF;
+      --blue-100:       #DCECff;
+      --blue-glow:      rgba(22, 106, 253, 0.35);
+      --blue-glow-soft: rgba(22, 106, 253, 0.15);
+
+      /* Text */
+      --text-primary:   #FFFFFF;
+      --text-body:      #CAD7FA;
+      --text-muted:     rgba(202, 215, 250, 0.55);
+      --text-faint:     rgba(202, 215, 250, 0.30);
+
+      /* Semantic */
+      --green:          #1FD97E;
+      --green-bg:       rgba(31, 217, 126, 0.08);
+      --green-border:   rgba(31, 217, 126, 0.25);
+      --yellow:         #F5A623;
+      --yellow-bg:      rgba(245, 166, 35, 0.08);
+      --yellow-border:  rgba(245, 166, 35, 0.25);
+      --red:            #FF4D6A;
+      --red-bg:         rgba(255, 77, 106, 0.08);
+      --red-border:     rgba(255, 77, 106, 0.25);
+
+      /* Glass */
+      --glass-bg:       rgba(6, 24, 41, 0.60);
+      --glass-border:   rgba(183, 214, 255, 0.10);
+      --glass-border-h: rgba(183, 214, 255, 0.20);
+
+      /* Borders */
+      --border:         rgba(183, 214, 255, 0.08);
+      --border-mid:     rgba(183, 214, 255, 0.14);
+      --border-strong:  rgba(183, 214, 255, 0.24);
+
+      /* Radius */
+      --r-xs:  4px;
+      --r-sm:  8px;
+      --r-md:  12px;
+      --r-lg:  16px;
+      --r-xl:  24px;
+      --r-2xl: 32px;
+      --r-full: 9999px;
+
+      /* Spacing */
+      --sp-1: 4px;  --sp-2: 8px;   --sp-3: 12px;  --sp-4: 16px;
+      --sp-5: 20px; --sp-6: 24px;  --sp-8: 32px;  --sp-10: 40px;
+      --sp-12: 48px; --sp-16: 64px;
+
+      /* Z-index */
+      --z-base:    0;
+      --z-above:   10;
+      --z-modal:   100;
+      --z-overlay: 200;
+      --z-toast:   300;
+      --z-sidebar: 50;
+      --z-topbar:  60;
+
+      /* Typography */
+      --font-ui:      'Manrope', system-ui, -apple-system, sans-serif;
+      --font-display: 'Libre Baskerville', Georgia, serif;
+
+      /* Transitions */
+      --t-fast:   0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      --t-base:   0.2s  cubic-bezier(0.4, 0, 0.2, 1);
+      --t-slow:   0.3s  cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+       RESET & BASE
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: var(--font-ui);
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100dvh;
+    }
+
+    /* ============================================================
+       AMBIENT BACKGROUND
+       ============================================================ */
+    .ambient {
+      position: fixed; inset: 0; pointer-events: none; z-index: var(--z-base);
+      overflow: hidden;
+    }
+    .ambient-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(120px);
+    }
+    .ambient-orb-1 {
+      width: 600px; height: 600px;
+      top: -200px; left: -100px;
+      background: radial-gradient(circle, rgba(22,106,253,0.12) 0%, transparent 70%);
+    }
+    .ambient-orb-2 {
+      width: 400px; height: 400px;
+      bottom: 10%; right: -100px;
+      background: radial-gradient(circle, rgba(183,214,255,0.07) 0%, transparent 70%);
+    }
+    .ambient-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(183,214,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(183,214,255,0.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 40%, transparent 100%);
+    }
+
+    /* ============================================================
+       SIDEBAR
+       ============================================================ */
+    .sidebar {
+      position: fixed; top: 0; left: 0;
+      width: 240px; height: 100dvh;
+      background: rgba(1, 15, 34, 0.85);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border);
+      padding: var(--sp-6) 0;
+      overflow-y: auto; overflow-x: hidden;
+      z-index: var(--z-sidebar);
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-mid) transparent;
+    }
+
+    .sidebar-logo {
+      display: flex; align-items: center; gap: var(--sp-3);
+      padding: 0 var(--sp-5) var(--sp-6);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: var(--sp-5);
+    }
+    .logo-mark {
+      width: 32px; height: 32px; flex-shrink: 0;
+    }
+    .logo-name {
+      font-size: 16px; font-weight: 700; letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .logo-name em {
+      font-family: var(--font-display);
+      font-style: italic;
+      color: var(--blue-200);
+    }
+
+    .sidebar-section {
+      margin-bottom: var(--sp-6);
+    }
+    .sidebar-section-title {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-faint);
+      padding: 0 var(--sp-5) var(--sp-2);
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: var(--sp-3);
+      padding: 7px var(--sp-5);
+      font-size: 13px; font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--t-fast), background var(--t-fast);
+      cursor: pointer;
+      border-right: 2px solid transparent;
+    }
+    .nav-item:hover { color: var(--text-body); background: var(--bg-hover); }
+    .nav-item.active {
+      color: var(--blue-200);
+      background: rgba(22, 106, 253, 0.08);
+      border-right-color: var(--blue-500);
+    }
+    .nav-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue-500);
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity var(--t-fast);
+    }
+    .nav-item.active .nav-dot { opacity: 1; }
+
+    /* ============================================================
+       MAIN CONTENT
+       ============================================================ */
+    .main {
+      margin-left: 240px;
+      width: calc(100% - 240px);
+      position: relative; z-index: 1;
+    }
+
+    .topbar {
+      position: sticky; top: 0;
+      height: 56px;
+      background: rgba(0, 13, 24, 0.80);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      z-index: var(--z-topbar);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 var(--sp-12);
+    }
+    .topbar-left { display: flex; align-items: center; gap: var(--sp-3); }
+    .topbar-tag {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--blue-300);
+      background: rgba(22,106,253,0.1);
+      border: 1px solid rgba(22,106,253,0.2);
+      padding: 3px 10px; border-radius: var(--r-full);
+    }
+    .topbar-title { font-size: 14px; font-weight: 600; color: var(--text-body); }
+    .topbar-right { display: flex; align-items: center; gap: var(--sp-3); }
+
+    .content { padding: var(--sp-12); max-width: 1100px; }
+
+    /* ============================================================
+       SECTION HEADERS
+       ============================================================ */
+    .ds-section {
+      padding-top: var(--sp-16);
+      margin-bottom: var(--sp-10);
+      border-top: 1px solid var(--border);
+    }
+    .ds-section:first-child { border-top: none; padding-top: 0; }
+    .ds-eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--blue-300);
+      margin-bottom: var(--sp-2);
+    }
+    .ds-heading {
+      font-size: 28px; font-weight: 800; letter-spacing: -0.03em;
+      color: var(--text-primary); margin-bottom: var(--sp-3);
+      line-height: 1.2;
+    }
+    .ds-heading em {
+      font-family: var(--font-display);
+      font-style: italic;
+      color: var(--blue-200);
+    }
+    .ds-desc {
+      font-size: 14px; line-height: 1.6;
+      color: var(--text-muted); max-width: 560px;
+    }
+
+    /* Canvas — component showcase area */
+    .canvas {
+      background: rgba(1,15,34,0.5);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: var(--sp-10);
+      margin: var(--sp-8) 0;
+      position: relative; overflow: hidden;
+    }
+    .canvas-dot-bg {
+      background-image: radial-gradient(rgba(183,214,255,0.06) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .canvas-label {
+      position: absolute; top: var(--sp-3); left: var(--sp-4);
+      font-size: 10px; font-weight: 600; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--text-faint);
+    }
+    .canvas-row {
+      display: flex; flex-wrap: wrap; gap: var(--sp-4); align-items: center;
+    }
+    .canvas-col {
+      display: flex; flex-direction: column; gap: var(--sp-4); align-items: flex-start;
+    }
+    .canvas-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); }
+    .canvas-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--sp-6); }
+    .canvas-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-4); }
+
+    .token-label {
+      font-size: 11px; font-family: 'Courier New', monospace;
+      color: var(--text-faint); margin-top: var(--sp-2);
+      display: block;
+    }
+
+    /* ============================================================
+       TYPOGRAPHY
+       ============================================================ */
+    .type-display {
+      font-size: 60px; font-weight: 800; letter-spacing: -0.04em;
+      line-height: 1.05; color: var(--text-primary);
+    }
+    .type-display em {
+      font-family: var(--font-display);
+      font-style: italic; color: var(--blue-200);
+    }
+    .type-h1 { font-size: 48px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; }
+    .type-h2 { font-size: 36px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; }
+    .type-h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
+    .type-h4 { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.3; }
+    .type-body-lg { font-size: 17px; line-height: 1.65; color: var(--text-body); }
+    .type-body    { font-size: 15px; line-height: 1.6;  color: var(--text-body); }
+    .type-body-sm { font-size: 13px; line-height: 1.55; color: var(--text-muted); }
+    .type-caption { font-size: 11px; line-height: 1.5;  color: var(--text-faint); }
+    .type-mono    { font-family: 'Courier New', monospace; font-size: 13px; color: var(--blue-200); }
+
+    .type-gradient {
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--blue-200) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    /* ============================================================
+       COLOR SWATCHES
+       ============================================================ */
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: var(--sp-4); }
+    .swatch-item { display: flex; flex-direction: column; gap: var(--sp-2); }
+    .swatch {
+      width: 100%; height: 64px; border-radius: var(--r-md);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .swatch-name { font-size: 12px; font-weight: 600; color: var(--text-body); }
+    .swatch-hex  { font-size: 11px; font-family: monospace; color: var(--text-faint); }
+
+    /* ============================================================
+       BUTTONS
+       ============================================================ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: var(--sp-2); padding: 0 var(--sp-5);
+      height: 40px; border-radius: var(--r-full);
+      font-family: var(--font-ui); font-size: 14px; font-weight: 600;
+      letter-spacing: -0.01em; cursor: pointer;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: transform var(--t-fast), opacity var(--t-fast), box-shadow var(--t-fast);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: var(--blue-500);
+      color: #fff;
+      box-shadow: 0 0 0 0 var(--blue-glow);
+    }
+    .btn-primary:hover {
+      background: var(--blue-400);
+      box-shadow: 0 4px 24px var(--blue-glow);
+    }
+
+    .btn-glass {
+      background: rgba(22, 106, 253, 0.12);
+      color: var(--blue-200);
+      border-color: rgba(22, 106, 253, 0.25);
+      backdrop-filter: blur(8px);
+    }
+    .btn-glass:hover {
+      background: rgba(22, 106, 253, 0.2);
+      border-color: rgba(22, 106, 253, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-body);
+      border-color: var(--border-mid);
+    }
+    .btn-outline:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+
+    .btn-ghost {
+      background: transparent; color: var(--text-muted);
+      border-color: transparent;
+    }
+    .btn-ghost:hover { color: var(--text-body); background: var(--bg-hover); }
+
+    .btn-danger {
+      background: var(--red-bg); color: var(--red);
+      border-color: var(--red-border);
+    }
+    .btn-danger:hover { background: rgba(255,77,106,0.15); }
+
+    .btn-white {
+      background: #fff; color: #000D18;
+      font-weight: 700;
+    }
+    .btn-white:hover { background: var(--blue-100); }
+
+    /* Sizes */
+    .btn-sm { height: 32px; padding: 0 var(--sp-4); font-size: 13px; }
+    .btn-lg { height: 48px; padding: 0 var(--sp-8); font-size: 15px; }
+    .btn-xl { height: 56px; padding: 0 var(--sp-10); font-size: 16px; }
+    .btn-icon { width: 40px; padding: 0; border-radius: var(--r-md); }
+    .btn-icon.btn-sm { width: 32px; }
+
+    /* ============================================================
+       BADGES
+       ============================================================ */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: var(--r-full);
+      font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+      border: 1px solid; white-space: nowrap;
+    }
+    .badge-dot {
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+    }
+    .badge-blue {
+      background: rgba(22,106,253,0.12); color: var(--blue-200);
+      border-color: rgba(22,106,253,0.25);
+    }
+    .badge-green {
+      background: var(--green-bg); color: var(--green);
+      border-color: var(--green-border);
+    }
+    .badge-yellow {
+      background: var(--yellow-bg); color: var(--yellow);
+      border-color: var(--yellow-border);
+    }
+    .badge-red {
+      background: var(--red-bg); color: var(--red);
+      border-color: var(--red-border);
+    }
+    .badge-neutral {
+      background: rgba(183,214,255,0.06); color: var(--text-muted);
+      border-color: var(--border);
+    }
+
+    /* ============================================================
+       CARDS
+       ============================================================ */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: var(--sp-6);
+      position: relative; overflow: hidden;
+      transition: border-color var(--t-base);
+    }
+    .card:hover { border-color: var(--border-mid); }
+
+    .card-glass {
+      background: var(--glass-bg);
+      border-color: var(--glass-border);
+      backdrop-filter: blur(20px);
+    }
+    .card-glass:hover { border-color: var(--glass-border-h); }
+
+    .card-glow {
+      background: var(--bg-surface);
+      border-color: rgba(22,106,253,0.3);
+      box-shadow: 0 0 40px rgba(22,106,253,0.08), inset 0 1px 0 rgba(183,214,255,0.08);
+    }
+
+    .card-gradient-border {
+      background: var(--bg-surface);
+      border: 1px solid transparent;
+      border-radius: var(--r-xl);
+      background-clip: padding-box;
+      position: relative;
+    }
+    .card-gradient-border::before {
+      content: '';
+      position: absolute; inset: -1px;
+      border-radius: var(--r-xl);
+      background: linear-gradient(135deg, rgba(22,106,253,0.5), rgba(183,214,255,0.15), rgba(22,106,253,0.1));
+      z-index: -1;
+    }
+
+    /* Shimmer accent on top */
+    .card-shimmer::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(183,214,255,0.4), transparent);
+    }
+
+    /* ============================================================
+       BALANCE CARD (hero widget)
+       ============================================================ */
+    .balance-card {
+      background: linear-gradient(135deg, #0D2A5C 0%, #082060 50%, #061548 100%);
+      border: 1px solid rgba(22,106,253,0.35);
+      border-radius: var(--r-xl);
+      padding: var(--sp-6);
+      position: relative; overflow: hidden;
+      box-shadow: 0 8px 40px rgba(22,106,253,0.15);
+    }
+    .balance-card::before {
+      content: '';
+      position: absolute; top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(22,106,253,0.3) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .balance-card::after {
+      content: '';
+      position: absolute; bottom: -40px; left: 20px;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(183,214,255,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .balance-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+      text-transform: uppercase; color: rgba(183,214,255,0.6);
+      margin-bottom: var(--sp-2);
+    }
+    .balance-amount {
+      font-size: 36px; font-weight: 800; letter-spacing: -0.03em;
+      color: #fff; line-height: 1.1;
+      position: relative; z-index: 1;
+    }
+    .balance-available {
+      font-size: 12px; color: var(--green);
+      margin-top: var(--sp-2); display: flex; align-items: center; gap: 5px;
+    }
+    .balance-available::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green); flex-shrink: 0;
+    }
+
+    /* ============================================================
+       STAT CARDS
+       ============================================================ */
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: var(--sp-5);
+    }
+    .stat-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-faint);
+      margin-bottom: var(--sp-3);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .stat-value {
+      font-size: 26px; font-weight: 800; letter-spacing: -0.03em;
+      color: var(--text-primary); line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-delta {
+      font-size: 12px; font-weight: 600;
+      margin-top: var(--sp-2); display: flex; align-items: center; gap: 4px;
+    }
+    .stat-delta.up   { color: var(--green); }
+    .stat-delta.down { color: var(--red); }
+
+    /* ============================================================
+       TRANSACTION LIST ITEM
+       ============================================================ */
+    .tx-list { display: flex; flex-direction: column; }
+    .tx-item {
+      display: flex; align-items: center; gap: var(--sp-4);
+      padding: var(--sp-4) 0;
+      border-bottom: 1px solid var(--border);
+      transition: background var(--t-fast);
+    }
+    .tx-item:last-child { border-bottom: none; }
+    .tx-icon {
+      width: 40px; height: 40px; border-radius: var(--r-md);
+      background: rgba(22,106,253,0.1); border: 1px solid rgba(22,106,253,0.2);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 16px;
+    }
+    .tx-info { flex: 1; min-width: 0; }
+    .tx-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    .tx-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .tx-amount { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .tx-amount.credit { color: var(--green); }
+    .tx-amount.debit  { color: var(--text-body); }
+
+    /* ============================================================
+       FORMS & INPUTS
+       ============================================================ */
+    .input-group {
+      display: flex; flex-direction: column; gap: var(--sp-2);
+      width: 100%; max-width: 360px;
+    }
+    .input-label {
+      font-size: 13px; font-weight: 600; color: var(--text-body);
+    }
+    .input-wrap { position: relative; display: flex; }
+    .input-icon {
+      position: absolute; left: var(--sp-3); top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted); font-size: 14px; pointer-events: none;
+    }
+
+    .input {
+      width: 100%; height: 44px;
+      padding: 0 var(--sp-4);
+      font-family: var(--font-ui); font-size: 14px;
+      color: var(--text-primary);
+      background: rgba(1, 15, 34, 0.8);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--r-md);
+      outline: none;
+      transition: border-color var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
+    }
+    .input::placeholder { color: var(--text-faint); }
+    .input:hover  { border-color: var(--border-strong); }
+    .input:focus  {
+      border-color: var(--blue-500);
+      box-shadow: 0 0 0 3px var(--blue-glow-soft);
+      background: var(--bg-elevated);
+    }
+    .input.has-icon { padding-left: 38px; }
+    .input.error    { border-color: var(--red); }
+    .input.error:focus { box-shadow: 0 0 0 3px rgba(255,77,106,0.15); }
+    .input.success  { border-color: var(--green); }
+
+    .input-msg { font-size: 12px; margin-top: 4px; }
+    .input-msg.error   { color: var(--red); }
+    .input-msg.success { color: var(--green); }
+    .input-msg.hint    { color: var(--text-faint); }
+
+    /* Select */
+    .select {
+      appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 4L6 8L10 4' stroke='%23CAD7FA' stroke-opacity='0.4' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    /* Textarea */
+    .textarea {
+      resize: vertical; height: auto; padding: var(--sp-3) var(--sp-4);
+      min-height: 100px;
+    }
+
+    /* Toggle / Switch */
+    .toggle-wrap {
+      display: flex; align-items: center; gap: var(--sp-3); cursor: pointer;
+    }
+    .toggle {
+      position: relative; width: 44px; height: 24px;
+    }
+    .toggle input { display: none; }
+    .toggle-track {
+      position: absolute; inset: 0; border-radius: var(--r-full);
+      background: var(--bg-overlay); border: 1px solid var(--border-mid);
+      transition: background var(--t-base), border-color var(--t-base);
+    }
+    .toggle input:checked ~ .toggle-track {
+      background: var(--blue-500); border-color: var(--blue-500);
+    }
+    .toggle-thumb {
+      position: absolute; top: 3px; left: 3px;
+      width: 18px; height: 18px; border-radius: 50%; background: #fff;
+      transition: transform var(--t-base);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    .toggle input:checked ~ .toggle-thumb { transform: translateX(20px); }
+
+    /* Checkbox */
+    .checkbox-wrap {
+      display: flex; align-items: center; gap: var(--sp-3);
+      cursor: pointer; user-select: none;
+    }
+    .checkbox {
+      width: 18px; height: 18px; border-radius: var(--r-xs);
+      border: 1px solid var(--border-mid);
+      background: var(--bg-overlay);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: border-color var(--t-fast), background var(--t-fast);
+    }
+    .checkbox.checked {
+      background: var(--blue-500); border-color: var(--blue-500);
+    }
+    .checkbox-label { font-size: 14px; color: var(--text-body); }
+
+    /* Radio */
+    .radio-wrap {
+      display: flex; align-items: center; gap: var(--sp-3); cursor: pointer;
+    }
+    .radio {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 1px solid var(--border-mid);
+      background: var(--bg-overlay);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: border-color var(--t-fast);
+    }
+    .radio.checked { border-color: var(--blue-500); border-width: 2px; }
+    .radio-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--blue-500);
+    }
+
+    /* ============================================================
+       ALERTS / TOASTS
+       ============================================================ */
+    .alert {
+      display: flex; align-items: flex-start; gap: var(--sp-3);
+      padding: var(--sp-4) var(--sp-5);
+      border-radius: var(--r-md); border: 1px solid;
+      width: 100%;
+    }
+    .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .alert-body { flex: 1; }
+    .alert-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .alert-desc  { font-size: 13px; line-height: 1.5; }
+
+    .alert-info    { background: rgba(22,106,253,0.08); border-color: rgba(22,106,253,0.25); }
+    .alert-info    .alert-title { color: var(--blue-200); }
+    .alert-info    .alert-desc  { color: var(--text-muted); }
+    .alert-success { background: var(--green-bg); border-color: var(--green-border); }
+    .alert-success .alert-title { color: var(--green); }
+    .alert-success .alert-desc  { color: var(--text-muted); }
+    .alert-warning { background: var(--yellow-bg); border-color: var(--yellow-border); }
+    .alert-warning .alert-title { color: var(--yellow); }
+    .alert-warning .alert-desc  { color: var(--text-muted); }
+    .alert-error   { background: var(--red-bg); border-color: var(--red-border); }
+    .alert-error   .alert-title { color: var(--red); }
+    .alert-error   .alert-desc  { color: var(--text-muted); }
+
+    /* Toast */
+    .toast {
+      display: flex; align-items: center; gap: var(--sp-3);
+      padding: var(--sp-3) var(--sp-5);
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      border-radius: var(--r-full);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      width: fit-content;
+    }
+    .toast-icon { font-size: 14px; }
+    .toast-msg  { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+    .toast-close { font-size: 12px; color: var(--text-faint); cursor: pointer; margin-left: var(--sp-2); }
+
+    /* ============================================================
+       PROGRESS BAR
+       ============================================================ */
+    .progress-wrap { width: 100%; }
+    .progress-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: var(--sp-2);
+    }
+    .progress-label { font-size: 13px; font-weight: 500; color: var(--text-body); }
+    .progress-value { font-size: 13px; font-weight: 600; color: var(--blue-200); font-variant-numeric: tabular-nums; }
+    .progress-track {
+      width: 100%; height: 6px; border-radius: var(--r-full);
+      background: var(--border);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: var(--r-full);
+      background: linear-gradient(90deg, var(--blue-500), var(--blue-300));
+      box-shadow: 0 0 8px rgba(22,106,253,0.4);
+    }
+
+    /* ============================================================
+       TABLE
+       ============================================================ */
+    .table-wrap {
+      border: 1px solid var(--border); border-radius: var(--r-lg);
+      overflow: hidden; width: 100%;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead tr { background: var(--bg-elevated); }
+    thead th {
+      text-align: left; padding: var(--sp-3) var(--sp-5);
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-faint);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background var(--t-fast);
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg-hover); }
+    tbody td { padding: var(--sp-4) var(--sp-5); color: var(--text-body); vertical-align: middle; }
+    td.td-mono { font-family: monospace; font-size: 12px; color: var(--text-muted); }
+
+    /* ============================================================
+       CODE BLOCK
+       ============================================================ */
+    .code-block {
+      background: #020D1C; border: 1px solid var(--border);
+      border-radius: var(--r-lg); overflow: hidden;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--sp-3) var(--sp-5);
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,13,24,0.8);
+    }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot-r { background: rgba(255,77,106,0.6); }
+    .code-dot-y { background: rgba(245,166,35,0.6); }
+    .code-dot-g { background: rgba(31,217,126,0.5); }
+    .code-filename { font-size: 11px; font-family: monospace; color: var(--text-faint); }
+    .code-copy {
+      font-size: 11px; color: var(--text-faint); cursor: pointer;
+      padding: 3px 8px; border-radius: var(--r-xs);
+      border: 1px solid var(--border); background: transparent;
+      transition: color var(--t-fast), border-color var(--t-fast);
+    }
+    .code-copy:hover { color: var(--text-body); border-color: var(--border-mid); }
+    pre { padding: var(--sp-5); overflow-x: auto; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; }
+    .c-kw  { color: #6EA3FF; }
+    .c-str { color: #B7D6FF; }
+    .c-fn  { color: #7DD3FC; }
+    .c-cm  { color: rgba(202,215,250,0.35); font-style: italic; }
+    .c-num { color: var(--green); }
+    .c-key { color: #93C5FD; }
+
+    /* ============================================================
+       AVATAR
+       ============================================================ */
+    .avatar {
+      border-radius: 50%; border: 2px solid var(--border-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; flex-shrink: 0; overflow: hidden;
+      background: rgba(22,106,253,0.15);
+      color: var(--blue-200);
+    }
+    .avatar-xs { width: 24px; height: 24px; font-size: 9px; }
+    .avatar-sm { width: 32px; height: 32px; font-size: 11px; }
+    .avatar-md { width: 40px; height: 40px; font-size: 14px; }
+    .avatar-lg { width: 56px; height: 56px; font-size: 18px; }
+    .avatar-xl { width: 72px; height: 72px; font-size: 22px; }
+    .avatar-group { display: flex; }
+    .avatar-group .avatar { margin-left: -10px; border-color: var(--bg-base); }
+    .avatar-group .avatar:first-child { margin-left: 0; }
+
+    /* ============================================================
+       DIVIDER
+       ============================================================ */
+    .divider {
+      height: 1px; width: 100%;
+      background: linear-gradient(90deg, transparent, var(--border-mid), transparent);
+      margin: var(--sp-8) 0;
+    }
+    .divider-label {
+      display: flex; align-items: center; gap: var(--sp-4);
+      margin: var(--sp-8) 0;
+    }
+    .divider-label::before, .divider-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-mid), transparent);
+    }
+    .divider-label span {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-faint);
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       TABS
+       ============================================================ */
+    .tabs {
+      display: flex; gap: 2px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--r-full);
+      padding: 3px;
+      width: fit-content;
+    }
+    .tab {
+      padding: 6px 18px; border-radius: var(--r-full);
+      font-size: 13px; font-weight: 500;
+      color: var(--text-muted); cursor: pointer;
+      transition: color var(--t-fast), background var(--t-fast);
+      white-space: nowrap;
+    }
+    .tab.active {
+      background: var(--blue-500); color: #fff;
+      box-shadow: 0 2px 8px var(--blue-glow);
+    }
+    .tab:hover:not(.active) { color: var(--text-body); }
+
+    /* Underline tabs variant */
+    .tabs-line {
+      display: flex; gap: var(--sp-6);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0;
+    }
+    .tab-line {
+      padding: var(--sp-3) 0; font-size: 14px; font-weight: 500;
+      color: var(--text-muted); cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: color var(--t-fast), border-color var(--t-fast);
+    }
+    .tab-line.active { color: var(--blue-200); border-bottom-color: var(--blue-500); }
+    .tab-line:hover:not(.active) { color: var(--text-body); }
+
+    /* ============================================================
+       SKELETON
+       ============================================================ */
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg,
+        rgba(183,214,255,0.04) 25%,
+        rgba(183,214,255,0.08) 50%,
+        rgba(183,214,255,0.04) 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.8s infinite;
+      border-radius: var(--r-sm);
+    }
+    .skeleton-text { height: 14px; width: 100%; border-radius: var(--r-xs); }
+    .skeleton-title { height: 28px; width: 60%; }
+    .skeleton-card { height: 120px; width: 100%; border-radius: var(--r-xl); }
+
+    /* ============================================================
+       PIGEON BRAND HERO
+       ============================================================ */
+    .hero-section {
+      background: linear-gradient(180deg, rgba(22,106,253,0.06) 0%, transparent 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--r-2xl);
+      padding: var(--sp-16) var(--sp-12);
+      text-align: center;
+      position: relative; overflow: hidden;
+      margin-bottom: var(--sp-16);
+    }
+    .hero-section::before {
+      content: '';
+      position: absolute; top: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(22,106,253,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: var(--sp-2);
+      padding: 5px 14px; border-radius: var(--r-full);
+      background: rgba(22,106,253,0.1); border: 1px solid rgba(22,106,253,0.25);
+      font-size: 12px; font-weight: 600; color: var(--blue-200);
+      letter-spacing: 0.04em; margin-bottom: var(--sp-6);
+    }
+    .hero-headline {
+      font-size: 64px; font-weight: 800; letter-spacing: -0.04em;
+      line-height: 1.05; color: var(--text-primary);
+      margin-bottom: var(--sp-5);
+    }
+    .hero-headline em {
+      font-family: var(--font-display);
+      font-style: italic; color: var(--blue-200);
+    }
+    .hero-sub {
+      font-size: 18px; color: var(--text-muted); line-height: 1.6;
+      max-width: 500px; margin: 0 auto var(--sp-10);
+    }
+    .hero-actions { display: flex; justify-content: center; gap: var(--sp-4); flex-wrap: wrap; }
+
+    /* ============================================================
+       NAV DEMO
+       ============================================================ */
+    .nav-demo {
+      background: var(--glass-bg); backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--r-full);
+      padding: 6px 6px 6px var(--sp-6);
+      display: flex; align-items: center; gap: var(--sp-4);
+      width: fit-content;
+    }
+    .nav-demo-links { display: flex; gap: var(--sp-1); }
+    .nav-demo-link {
+      padding: 7px 14px; border-radius: var(--r-full);
+      font-size: 14px; font-weight: 500;
+      color: var(--text-muted); cursor: pointer;
+      transition: color var(--t-fast), background var(--t-fast);
+    }
+    .nav-demo-link:hover   { color: var(--text-body); background: var(--bg-hover); }
+    .nav-demo-link.active  { color: var(--text-primary); background: rgba(183,214,255,0.07); }
+
+    /* ============================================================
+       MODAL DEMO
+       ============================================================ */
+    .modal-backdrop {
+      background: rgba(0,13,24,0.8); backdrop-filter: blur(8px);
+      border-radius: var(--r-xl); padding: var(--sp-10);
+      display: flex; align-items: center; justify-content: center;
+      min-height: 280px;
+    }
+    .modal {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--r-xl);
+      padding: var(--sp-8);
+      width: 100%; max-width: 400px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6),
+                  inset 0 1px 0 rgba(183,214,255,0.08);
+    }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: var(--sp-5);
+    }
+    .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+    .modal-close {
+      width: 28px; height: 28px; border-radius: var(--r-sm);
+      background: var(--bg-hover); border: 1px solid var(--border);
+      color: var(--text-muted); cursor: pointer; font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-body { color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: var(--sp-6); }
+    .modal-footer { display: flex; gap: var(--sp-3); justify-content: flex-end; }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main    { margin-left: 0; width: 100%; }
+      .content { padding: var(--sp-6); }
+      .canvas-grid-3 { grid-template-columns: 1fr 1fr; }
+      .canvas-grid-4 { grid-template-columns: 1fr 1fr; }
+      .hero-headline { font-size: 40px; }
+    }
+    @media (max-width: 600px) {
+      .canvas-grid-2, .canvas-grid-3, .canvas-grid-4 { grid-template-columns: 1fr; }
+      .hero-headline { font-size: 32px; }
+    }
+
+    /* ============================================================
+       SCROLLBAR
+       ============================================================ */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+    /* ============================================================
+       UTILITIES
+       ============================================================ */
+    .mt-2 { margin-top: var(--sp-2); }
+    .mt-3 { margin-top: var(--sp-3); }
+    .mt-4 { margin-top: var(--sp-4); }
+    .mt-6 { margin-top: var(--sp-6); }
+    .mt-8 { margin-top: var(--sp-8); }
+    .mb-4 { margin-bottom: var(--sp-4); }
+    .mb-6 { margin-bottom: var(--sp-6); }
+    .flex  { display: flex; }
+    .flex-col { display: flex; flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-2 { gap: var(--sp-2); }
+    .gap-3 { gap: var(--sp-3); }
+    .gap-4 { gap: var(--sp-4); }
+    .gap-6 { gap: var(--sp-6); }
+    .w-full { width: 100%; }
+    .text-center { text-align: center; }
+    .relative { position: relative; }
+    .tabular { font-variant-numeric: tabular-nums; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Ambient Background -->
+<div class="ambient" aria-hidden="true">
+  <div class="ambient-grid"></div>
+  <div class="ambient-orb ambient-orb-1"></div>
+  <div class="ambient-orb ambient-orb-2"></div>
+</div>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="rgba(22,106,253,0.15)" stroke="rgba(22,106,253,0.4)" stroke-width="1"/>
+      <path d="M22 10C22 10 20 8 16 8C11 8 8 12 8 16C8 18.5 9.5 21 12 22C11.5 20 12 18 14 17C15.5 16.2 17 16.5 18 15C19.5 13 19 11 22 10Z" fill="#166AFD"/>
+      <path d="M16 17C16 17 14 19 14 22C14 23.1 14.3 24 15 24.5C15.5 22 17 20 18 19C17.2 18.8 16.5 18 16 17Z" fill="#B7D6FF" opacity="0.8"/>
+      <circle cx="20" cy="11" r="1.5" fill="#B7D6FF"/>
+    </svg>
+    <span class="logo-name">Pigeon<em>Pag</em></span>
+  </div>
+
+  <nav>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Fundação</div>
+      <a href="#tokens" class="nav-item active"><span class="nav-dot"></span>Tokens</a>
+      <a href="#typography" class="nav-item"><span class="nav-dot"></span>Tipografia</a>
+      <a href="#cores" class="nav-item"><span class="nav-dot"></span>Cores</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Componentes</div>
+      <a href="#buttons" class="nav-item"><span class="nav-dot"></span>Botões</a>
+      <a href="#badges" class="nav-item"><span class="nav-dot"></span>Badges</a>
+      <a href="#cards" class="nav-item"><span class="nav-dot"></span>Cards</a>
+      <a href="#forms" class="nav-item"><span class="nav-dot"></span>Formulários</a>
+      <a href="#feedback" class="nav-item"><span class="nav-dot"></span>Feedback</a>
+      <a href="#navigation" class="nav-item"><span class="nav-dot"></span>Navegação</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Padrões</div>
+      <a href="#dashboard" class="nav-item"><span class="nav-dot"></span>Dashboard</a>
+      <a href="#tables" class="nav-item"><span class="nav-dot"></span>Tabelas</a>
+      <a href="#code" class="nav-item"><span class="nav-dot"></span>Código</a>
+    </div>
+  </nav>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-tag">v1.0</span>
+      <span class="topbar-title">PigeonPag Design System</span>
+    </div>
+    <div class="topbar-right">
+      <span class="badge badge-green"><span class="badge-dot" style="background:var(--green)"></span>Produção</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- HERO -->
+    <div class="hero-section">
+      <div class="hero-badge">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" fill="#166AFD" opacity="0.3"/><circle cx="6" cy="6" r="3" fill="#166AFD"/></svg>
+        PigeonPag Design System
+      </div>
+      <h1 class="hero-headline">A solução <em>Pix</em> que está<br>em todos os lugares</h1>
+      <p class="hero-sub">Fundação visual completa — tokens, componentes e padrões para construir produtos financeiros de classe mundial.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L8 11M8 11L4 7M8 11L12 7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 13H14" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Ver Componentes
+        </button>
+        <button class="btn btn-outline btn-lg">Documentação</button>
+      </div>
+    </div>
+
+    <!-- TOKENS -->
+    <section id="tokens" class="ds-section">
+      <div class="ds-eyebrow">Fundação</div>
+      <h2 class="ds-heading">Design <em>Tokens</em></h2>
+      <p class="ds-desc">Variáveis CSS que formam a base de todo o sistema. Modifique os tokens para adaptar o visual sem alterar componentes.</p>
+
+      <div class="canvas canvas-dot-bg">
+        <div class="canvas-label">Espaçamento</div>
+        <div class="canvas-row" style="margin-top: var(--sp-4); align-items: flex-end;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:4px;height:4px;background:var(--blue-500);border-radius:2px"></div>
+            <span class="token-label" style="margin:0">4px</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:8px;height:8px;background:var(--blue-500);border-radius:2px"></div>
+            <span class="token-label" style="margin:0">8px</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:12px;height:12px;background:var(--blue-500);border-radius:2px"></div>
+            <span class="token-label" style="margin:0">12px</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:16px;height:16px;background:var(--blue-500);border-radius:2px"></div>
+            <span class="token-label" style="margin:0">16px</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:24px;height:24px;background:var(--blue-500);border-radius:2px"></div>
+            <span class="token-label" style="margin:0">24px</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:32px;height:32px;background:var(--blue-500);border-radius:2px"></div>
+            <span class="token-label" style="margin:0">32px</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:48px;height:48px;background:var(--blue-500);border-radius:2px"></div>
+            <span class="token-label" style="margin:0">48px</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:64px;height:64px;background:var(--blue-500);border-radius:2px"></div>
+            <span class="token-label" style="margin:0">64px</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Border Radius</div>
+        <div class="canvas-row" style="margin-top: var(--sp-4);">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2)">
+            <div style="width:48px;height:48px;background:rgba(22,106,253,0.2);border:1px solid rgba(22,106,253,0.4);border-radius:4px"></div>
+            <span class="token-label" style="margin:0">4px xs</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2)">
+            <div style="width:48px;height:48px;background:rgba(22,106,253,0.2);border:1px solid rgba(22,106,253,0.4);border-radius:8px"></div>
+            <span class="token-label" style="margin:0">8px sm</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2)">
+            <div style="width:48px;height:48px;background:rgba(22,106,253,0.2);border:1px solid rgba(22,106,253,0.4);border-radius:12px"></div>
+            <span class="token-label" style="margin:0">12px md</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2)">
+            <div style="width:48px;height:48px;background:rgba(22,106,253,0.2);border:1px solid rgba(22,106,253,0.4);border-radius:16px"></div>
+            <span class="token-label" style="margin:0">16px lg</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2)">
+            <div style="width:48px;height:48px;background:rgba(22,106,253,0.2);border:1px solid rgba(22,106,253,0.4);border-radius:24px"></div>
+            <span class="token-label" style="margin:0">24px xl</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2)">
+            <div style="width:48px;height:48px;background:rgba(22,106,253,0.2);border:1px solid rgba(22,106,253,0.4);border-radius:9999px"></div>
+            <span class="token-label" style="margin:0">full</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section id="typography" class="ds-section">
+      <div class="ds-eyebrow">Tipografia</div>
+      <h2 class="ds-heading"><em>Manrope</em> + Libre Baskerville</h2>
+      <p class="ds-desc">Manrope para interfaces e textos corridos. Libre Baskerville Italic para destacar palavras-chave nos títulos, criando contraste entre o geométrico e o humanista.</p>
+
+      <div class="canvas">
+        <div class="type-display">A solução <em>Pix</em><br>que está em todos<br>os lugares.</div>
+        <span class="token-label">Display — Manrope 800 + Libre Baskerville Italic</span>
+      </div>
+
+      <div class="canvas" style="margin-top:0">
+        <div class="canvas-col">
+          <div>
+            <div class="type-h1">Mais <em style="font-family:var(--font-display);font-style:italic;color:var(--blue-200)">aprovação</em>, menos taxas</div>
+            <span class="token-label">H1 — 48px / 800 / -0.035em</span>
+          </div>
+          <div>
+            <div class="type-h2">Integração em minutos</div>
+            <span class="token-label">H2 — 36px / 700 / -0.03em</span>
+          </div>
+          <div>
+            <div class="type-h3">Dashboard financeiro</div>
+            <span class="token-label">H3 — 24px / 700 / -0.025em</span>
+          </div>
+          <div>
+            <div class="type-h4">Saldo disponível para saque</div>
+            <span class="token-label">H4 — 18px / 600 / -0.02em</span>
+          </div>
+          <div class="divider" style="margin:var(--sp-4) 0"></div>
+          <div>
+            <p class="type-body-lg">Na PigeonPag você tem a confiança de que 100% das transações Pix são repassadas corretamente, sem desvio de vendas, sem Med falso e sem reservas inesperadas.</p>
+            <span class="token-label">Body Large — 17px / 400 / 1.65 / #CAD7FA</span>
+          </div>
+          <div>
+            <p class="type-body">Diferente da concorrência, não utilizamos white label. Desenvolvemos uma tecnologia própria para otimizar o processamento de Pix, resultando em mais rapidez nas transações e zero instabilidades.</p>
+            <span class="token-label">Body — 15px / 400 / 1.6 / #CAD7FA</span>
+          </div>
+          <div>
+            <p class="type-body-sm">Ideal para Gateways, Bets, Plataforma de doação, E-commerce e Saas. Adaptável ao seu fluxo.</p>
+            <span class="token-label">Body Small — 13px / 400 / 1.55 / muted</span>
+          </div>
+          <div>
+            <span class="type-caption">Taxa de aprovação atualizada há 2 minutos</span>
+            <span class="token-label">Caption — 11px / 400 / faint</span>
+          </div>
+          <div>
+            <span class="type-mono">pigeon_api_key_prod_xk92mf...</span>
+            <span class="token-label">Mono — Courier New / 13px / #B7D6FF</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLORS -->
+    <section id="cores" class="ds-section">
+      <div class="ds-eyebrow">Cores</div>
+      <h2 class="ds-heading">Paleta <em>PigeonPag</em></h2>
+      <p class="ds-desc">Sistema de cores construído sobre o deep navy #000D18 com azul primário #166AFD e escala de texto em #CAD7FA.</p>
+
+      <div class="canvas canvas-dot-bg">
+        <div class="canvas-label">Brand Blue</div>
+        <div class="swatch-grid" style="margin-top:var(--sp-4)">
+          <div class="swatch-item">
+            <div class="swatch" style="background:#166AFD;box-shadow:0 4px 20px rgba(22,106,253,0.4)"></div>
+            <span class="swatch-name">Blue 500</span>
+            <span class="swatch-hex">#166AFD</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:#3D84FE"></div>
+            <span class="swatch-name">Blue 400</span>
+            <span class="swatch-hex">#3D84FE</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:#6EA3FF"></div>
+            <span class="swatch-name">Blue 300</span>
+            <span class="swatch-hex">#6EA3FF</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:#B7D6FF"></div>
+            <span class="swatch-name">Blue 200</span>
+            <span class="swatch-hex">#B7D6FF</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:#DCECff"></div>
+            <span class="swatch-name">Blue 100</span>
+            <span class="swatch-hex">#DCECFF</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Background Scale</div>
+        <div class="swatch-grid" style="margin-top:var(--sp-4)">
+          <div class="swatch-item">
+            <div class="swatch" style="background:#000D18;border:1px solid rgba(183,214,255,0.2)"></div>
+            <span class="swatch-name">Base</span>
+            <span class="swatch-hex">#000D18</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:#010F22;border:1px solid rgba(183,214,255,0.15)"></div>
+            <span class="swatch-name">Surface</span>
+            <span class="swatch-hex">#010F22</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:#061829;border:1px solid rgba(183,214,255,0.12)"></div>
+            <span class="swatch-name">Elevated</span>
+            <span class="swatch-hex">#061829</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:#0A1F35;border:1px solid rgba(183,214,255,0.1)"></div>
+            <span class="swatch-name">Overlay</span>
+            <span class="swatch-hex">#0A1F35</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Text Scale</div>
+        <div class="swatch-grid" style="margin-top:var(--sp-4)">
+          <div class="swatch-item">
+            <div class="swatch" style="background:#FFFFFF"></div>
+            <span class="swatch-name">Primary</span>
+            <span class="swatch-hex">#FFFFFF</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:#CAD7FA"></div>
+            <span class="swatch-name">Body</span>
+            <span class="swatch-hex">#CAD7FA</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:rgba(202,215,250,0.55)"></div>
+            <span class="swatch-name">Muted</span>
+            <span class="swatch-hex">55% #CAD7FA</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:rgba(202,215,250,0.30)"></div>
+            <span class="swatch-name">Faint</span>
+            <span class="swatch-hex">30% #CAD7FA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Semantic</div>
+        <div class="swatch-grid" style="margin-top:var(--sp-4)">
+          <div class="swatch-item">
+            <div class="swatch" style="background:#1FD97E"></div>
+            <span class="swatch-name">Success</span>
+            <span class="swatch-hex">#1FD97E</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:#F5A623"></div>
+            <span class="swatch-name">Warning</span>
+            <span class="swatch-hex">#F5A623</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" style="background:#FF4D6A"></div>
+            <span class="swatch-name">Danger</span>
+            <span class="swatch-hex">#FF4D6A</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section id="buttons" class="ds-section">
+      <div class="ds-eyebrow">Componentes</div>
+      <h2 class="ds-heading"><em>Botões</em></h2>
+      <p class="ds-desc">Pill-shaped por padrão. Transições apenas em transform e opacity. Foco visível para acessibilidade.</p>
+
+      <div class="canvas canvas-dot-bg">
+        <div class="canvas-label">Variantes</div>
+        <div class="canvas-row" style="margin-top:var(--sp-4)">
+          <div class="flex flex-col gap-2 items-center">
+            <button class="btn btn-primary">Criar conta</button>
+            <span class="token-label" style="margin:0">Primary</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <button class="btn btn-glass">Ver mais</button>
+            <span class="token-label" style="margin:0">Glass</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <button class="btn btn-outline">Documentação</button>
+            <span class="token-label" style="margin:0">Outline</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <button class="btn btn-ghost">Entrar →</button>
+            <span class="token-label" style="margin:0">Ghost</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <button class="btn btn-white">Começar grátis</button>
+            <span class="token-label" style="margin:0">White</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <button class="btn btn-danger">Deletar conta</button>
+            <span class="token-label" style="margin:0">Danger</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Tamanhos</div>
+        <div class="canvas-row" style="margin-top:var(--sp-4);align-items:flex-end">
+          <div class="flex flex-col gap-2 items-center">
+            <button class="btn btn-primary btn-sm">Small</button>
+            <span class="token-label" style="margin:0">sm / 32px</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <button class="btn btn-primary">Default</button>
+            <span class="token-label" style="margin:0">md / 40px</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <button class="btn btn-primary btn-lg">Large</button>
+            <span class="token-label" style="margin:0">lg / 48px</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <button class="btn btn-primary btn-xl">
+              Criar conta agora →
+            </button>
+            <span class="token-label" style="margin:0">xl / 56px</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Com ícones</div>
+        <div class="canvas-row" style="margin-top:var(--sp-4)">
+          <button class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="white" stroke-width="1.5"/><path d="M8 5V8L10 10" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Sacar agora
+          </button>
+          <button class="btn btn-glass">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8H14M8 2L14 8L8 14" stroke="#B7D6FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Transferir
+          </button>
+          <button class="btn btn-outline">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 4V3C5 2.4 5.4 2 6 2H10C10.6 2 11 2.4 11 3V4" stroke="currentColor" stroke-width="1.5"/></svg>
+            API Keys
+          </button>
+          <button class="btn btn-icon btn-outline" aria-label="Configurações">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5V3M8 13V14.5M1.5 8H3M13 8H14.5M3.5 3.5L4.5 4.5M11.5 11.5L12.5 12.5M3.5 12.5L4.5 11.5M11.5 4.5L12.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BADGES -->
+    <section id="badges" class="ds-section">
+      <div class="ds-eyebrow">Componentes</div>
+      <h2 class="ds-heading"><em>Badges</em> & Tags</h2>
+      <p class="ds-desc">Indicadores de status e categorias. Pill com dot opcional.</p>
+
+      <div class="canvas canvas-dot-bg">
+        <div class="canvas-label">Status</div>
+        <div class="canvas-row" style="margin-top:var(--sp-4)">
+          <div class="flex flex-col gap-2 items-center">
+            <span class="badge badge-green"><span class="badge-dot" style="background:var(--green)"></span>Aprovado</span>
+            <span class="token-label" style="margin:0">Success</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <span class="badge badge-yellow"><span class="badge-dot" style="background:var(--yellow)"></span>Pendente</span>
+            <span class="token-label" style="margin:0">Warning</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <span class="badge badge-red"><span class="badge-dot" style="background:var(--red)"></span>Rejeitado</span>
+            <span class="token-label" style="margin:0">Error</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <span class="badge badge-blue"><span class="badge-dot" style="background:var(--blue-300)"></span>Processando</span>
+            <span class="token-label" style="margin:0">Info</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <span class="badge badge-neutral">Pix</span>
+            <span class="token-label" style="margin:0">Neutral</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARDS -->
+    <section id="cards" class="ds-section">
+      <div class="ds-eyebrow">Componentes</div>
+      <h2 class="ds-heading">Surfaces & <em>Cards</em></h2>
+      <p class="ds-desc">Quatro elevações com variantes glass. Todos com border sutil para percepção de profundidade no fundo escuro.</p>
+
+      <div class="canvas canvas-dot-bg">
+        <div class="canvas-label">Card Variants</div>
+        <div class="canvas-grid-2" style="margin-top:var(--sp-4)">
+          <div class="card">
+            <span class="badge badge-neutral mb-4" style="display:inline-flex">Surface</span>
+            <div class="type-h4" style="margin-bottom:var(--sp-2)">Card padrão</div>
+            <p class="type-body-sm">Background <code style="font-size:11px;color:var(--blue-200)">#010F22</code> com borda 8% opacidade. Elevação base do sistema.</p>
+          </div>
+          <div class="card card-glass">
+            <span class="badge badge-blue mb-4" style="display:inline-flex">Glass</span>
+            <div class="type-h4" style="margin-bottom:var(--sp-2)">Card glass</div>
+            <p class="type-body-sm">Backdrop-filter blur 20px com fundo semi-transparente. Para overlays e modais.</p>
+          </div>
+          <div class="card card-glow">
+            <span class="badge badge-blue mb-4" style="display:inline-flex">Glow</span>
+            <div class="type-h4" style="margin-bottom:var(--sp-2)">Card em destaque</div>
+            <p class="type-body-sm">Borda azul com box-shadow sutil. Usado para feature principal ou plano recomendado.</p>
+          </div>
+          <div class="card-gradient-border" style="padding:var(--sp-6)">
+            <span class="badge badge-blue mb-4" style="display:inline-flex">Premium</span>
+            <div class="type-h4" style="margin-bottom:var(--sp-2)">Gradient border</div>
+            <p class="type-body-sm">Pseudo-elemento com gradiente linear na borda. Para CTAs e planos premium.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORMS -->
+    <section id="forms" class="ds-section">
+      <div class="ds-eyebrow">Componentes</div>
+      <h2 class="ds-heading"><em>Formulários</em></h2>
+      <p class="ds-desc">Inputs, selects, textareas, toggles, checkboxes e radios. Focus ring azul com 3px de glow.</p>
+
+      <div class="canvas canvas-dot-bg">
+        <div class="canvas-label">Inputs</div>
+        <div class="canvas-grid-2" style="margin-top:var(--sp-4)">
+          <div class="canvas-col">
+            <div class="input-group">
+              <label class="input-label">E-mail</label>
+              <div class="input-wrap">
+                <span class="input-icon">✉</span>
+                <input type="email" class="input has-icon" placeholder="voce@empresa.com">
+              </div>
+              <span class="input-msg hint">Nunca vamos compartilhar seu e-mail.</span>
+            </div>
+            <div class="input-group">
+              <label class="input-label">Chave Pix</label>
+              <input type="text" class="input success" value="11987654321" readonly>
+              <span class="input-msg success">✓ Chave Pix válida</span>
+            </div>
+            <div class="input-group">
+              <label class="input-label">Valor</label>
+              <input type="text" class="input error" value="R$ 0,00">
+              <span class="input-msg error">Valor mínimo de R$ 1,00</span>
+            </div>
+          </div>
+          <div class="canvas-col">
+            <div class="input-group" style="max-width:100%">
+              <label class="input-label">Tipo de conta</label>
+              <select class="input select">
+                <option>Gateway de pagamento</option>
+                <option>E-commerce</option>
+                <option>Plataforma SaaS</option>
+                <option>Apostas</option>
+              </select>
+            </div>
+            <div class="input-group" style="max-width:100%">
+              <label class="input-label">Descrição da transação</label>
+              <textarea class="input textarea" placeholder="Descreva o motivo..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Controles</div>
+        <div class="canvas-row" style="margin-top:var(--sp-4);flex-wrap:wrap;gap:var(--sp-8)">
+          <div class="canvas-col">
+            <label class="toggle-wrap">
+              <div class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </div>
+              <span class="checkbox-label">Notificações ativas</span>
+            </label>
+            <label class="toggle-wrap">
+              <div class="toggle">
+                <input type="checkbox">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </div>
+              <span class="checkbox-label">Modo de teste</span>
+            </label>
+          </div>
+          <div class="canvas-col">
+            <label class="checkbox-wrap">
+              <div class="checkbox checked">
+                <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <span class="checkbox-label">Aceito os termos de uso</span>
+            </label>
+            <label class="checkbox-wrap">
+              <div class="checkbox"></div>
+              <span class="checkbox-label">Receber relatórios semanais</span>
+            </label>
+          </div>
+          <div class="canvas-col">
+            <label class="radio-wrap">
+              <div class="radio checked"><div class="radio-dot"></div></div>
+              <span class="checkbox-label">Pix instantâneo</span>
+            </label>
+            <label class="radio-wrap">
+              <div class="radio"></div>
+              <span class="checkbox-label">Pix agendado</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEEDBACK -->
+    <section id="feedback" class="ds-section">
+      <div class="ds-eyebrow">Componentes</div>
+      <h2 class="ds-heading">Alertas & <em>Feedback</em></h2>
+
+      <div class="canvas canvas-dot-bg">
+        <div class="canvas-label">Alerts</div>
+        <div class="canvas-col" style="margin-top:var(--sp-4)">
+          <div class="alert alert-info">
+            <span class="alert-icon">ℹ</span>
+            <div class="alert-body">
+              <div class="alert-title">Integração disponível</div>
+              <div class="alert-desc">Sua API key foi gerada. Consulte a documentação para configurar os webhooks.</div>
+            </div>
+          </div>
+          <div class="alert alert-success">
+            <span class="alert-icon">✓</span>
+            <div class="alert-body">
+              <div class="alert-title">Saque aprovado</div>
+              <div class="alert-desc">R$ 4.200,00 transferido para sua conta em até 10 minutos.</div>
+            </div>
+          </div>
+          <div class="alert alert-warning">
+            <span class="alert-icon">⚠</span>
+            <div class="alert-body">
+              <div class="alert-title">Limite próximo</div>
+              <div class="alert-desc">Você atingiu 85% do seu limite diário de transações.</div>
+            </div>
+          </div>
+          <div class="alert alert-error">
+            <span class="alert-icon">✕</span>
+            <div class="alert-body">
+              <div class="alert-title">Transação rejeitada</div>
+              <div class="alert-desc">Chave Pix inválida ou CPF/CNPJ não encontrado no sistema.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Toasts</div>
+        <div class="canvas-col" style="margin-top:var(--sp-4);align-items:flex-start">
+          <div class="toast">
+            <span class="toast-icon">✓</span>
+            <span class="toast-msg">Pix enviado com sucesso</span>
+            <span class="toast-close">✕</span>
+          </div>
+          <div class="toast" style="border-color:rgba(255,77,106,0.25)">
+            <span class="toast-icon" style="color:var(--red)">✕</span>
+            <span class="toast-msg">Falha ao processar transação</span>
+            <span class="toast-close">✕</span>
+          </div>
+          <div class="toast" style="border-color:rgba(245,166,35,0.25)">
+            <span class="toast-icon" style="color:var(--yellow)">⚠</span>
+            <span class="toast-msg">Verificação de identidade pendente</span>
+            <span class="toast-close">✕</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Progress Bars</div>
+        <div class="canvas-col" style="margin-top:var(--sp-4);width:100%">
+          <div class="progress-wrap">
+            <div class="progress-header">
+              <span class="progress-label">Taxa de aprovação</span>
+              <span class="progress-value">89.9%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:89.9%"></div></div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-header">
+              <span class="progress-label">Volume mensal</span>
+              <span class="progress-value">53.6%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:53.6%;background:linear-gradient(90deg,var(--green),#5AF0A0)"></div></div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-header">
+              <span class="progress-label">Limite diário</span>
+              <span class="progress-value">85%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:85%;background:linear-gradient(90deg,var(--yellow),#FFD166)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Skeleton Loading</div>
+        <div class="canvas-col" style="margin-top:var(--sp-4);gap:var(--sp-3)">
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text" style="width:70%"></div>
+          <div style="display:flex;gap:var(--sp-4);margin-top:var(--sp-2)">
+            <div class="skeleton skeleton-card" style="height:80px"></div>
+            <div class="skeleton skeleton-card" style="height:80px"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVIGATION -->
+    <section id="navigation" class="ds-section">
+      <div class="ds-eyebrow">Componentes</div>
+      <h2 class="ds-heading"><em>Navegação</em></h2>
+
+      <div class="canvas canvas-dot-bg">
+        <div class="canvas-label">Navbar glass pill</div>
+        <div style="margin-top:var(--sp-4)">
+          <div class="nav-demo">
+            <div class="nav-demo-links">
+              <a class="nav-demo-link active">Home</a>
+              <a class="nav-demo-link">Por que</a>
+              <a class="nav-demo-link">Taxas</a>
+              <a class="nav-demo-link">Alertas</a>
+              <a class="nav-demo-link">FAQ</a>
+            </div>
+            <button class="btn btn-primary btn-sm">Criar conta</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Tabs (pill)</div>
+        <div class="canvas-col" style="margin-top:var(--sp-4)">
+          <div class="tabs">
+            <div class="tab active">Hoje</div>
+            <div class="tab">7 dias</div>
+            <div class="tab">30 dias</div>
+            <div class="tab">Personalizado</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Tabs (underline)</div>
+        <div class="canvas-col" style="margin-top:var(--sp-4)">
+          <div class="tabs-line">
+            <div class="tab-line active">Visão geral</div>
+            <div class="tab-line">Transações</div>
+            <div class="tab-line">Saques</div>
+            <div class="tab-line">Webhooks</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Divider com label</div>
+        <div style="margin-top:var(--sp-4)">
+          <div class="divider-label"><span>ou continue com</span></div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Avatares</div>
+        <div class="canvas-row" style="margin-top:var(--sp-4)">
+          <div class="flex flex-col gap-2 items-center">
+            <div class="avatar avatar-xs">MV</div>
+            <span class="token-label" style="margin:0">xs 24</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <div class="avatar avatar-sm">PP</div>
+            <span class="token-label" style="margin:0">sm 32</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <div class="avatar avatar-md">JK</div>
+            <span class="token-label" style="margin:0">md 40</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <div class="avatar avatar-lg">AS</div>
+            <span class="token-label" style="margin:0">lg 56</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <div class="avatar avatar-xl" style="background:linear-gradient(135deg,rgba(22,106,253,0.3),rgba(183,214,255,0.1))">🐦</div>
+            <span class="token-label" style="margin:0">xl 72</span>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <div class="avatar-group">
+              <div class="avatar avatar-sm">A</div>
+              <div class="avatar avatar-sm">B</div>
+              <div class="avatar avatar-sm">C</div>
+              <div class="avatar avatar-sm" style="font-size:9px;background:var(--bg-overlay)">+4</div>
+            </div>
+            <span class="token-label" style="margin:0">group</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="ds-section">
+      <div class="ds-eyebrow">Padrões</div>
+      <h2 class="ds-heading">Painel <em>Financeiro</em></h2>
+      <p class="ds-desc">Widgets compostos para o dashboard principal. Construídos a partir dos tokens e componentes base.</p>
+
+      <div class="canvas canvas-dot-bg">
+        <div class="canvas-label">Balance + Stats</div>
+        <div style="margin-top:var(--sp-4)">
+          <div class="canvas-grid-2" style="margin-bottom:var(--sp-4)">
+            <div class="balance-card">
+              <div class="balance-label">Saldo Disponível</div>
+              <div class="balance-amount">R$ 1.037.402,42</div>
+              <div class="balance-available">Disponível para saque</div>
+              <div style="margin-top:var(--sp-5);display:flex;gap:var(--sp-3)">
+                <button class="btn btn-white btn-sm">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1V8M6 8L2 4M6 8L10 4" stroke="#000D18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 10H11" stroke="#000D18" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  Sacar
+                </button>
+                <button class="btn btn-glass btn-sm">Transferir</button>
+              </div>
+            </div>
+            <div class="stat-card" style="display:flex;flex-direction:column;justify-content:center">
+              <div class="balance-label" style="font-size:11px;color:var(--text-faint)">Saldo Bloqueado</div>
+              <div style="font-size:32px;font-weight:800;letter-spacing:-0.03em;color:var(--text-muted);font-variant-numeric:tabular-nums;">R$ 0,00</div>
+              <div style="font-size:12px;color:var(--text-faint);margin-top:var(--sp-2)">Nenhum valor retido</div>
+            </div>
+          </div>
+
+          <div class="canvas-grid-4">
+            <div class="stat-card">
+              <div class="stat-label">
+                Volume Total
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 4V7L9 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="stat-value">R$ 119.684</div>
+              <div class="stat-delta up">↑ 89.8% vs anterior</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Receita Líquida</div>
+              <div class="stat-value">R$ 111.306</div>
+              <div class="stat-delta up">↑ 89.8%</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Transações</div>
+              <div class="stat-value">2.426</div>
+              <div class="stat-delta up">↑ 89.5%</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Taxa de Aprovação</div>
+              <div class="stat-value">53.6%</div>
+              <div class="stat-delta up">↑ 4.8%</div>
+            </div>
+          </div>
+
+          <div class="canvas-grid-4" style="margin-top:var(--sp-4)">
+            <div class="stat-card" style="border-color:var(--green-border);background:rgba(31,217,126,0.04)">
+              <div class="stat-label" style="color:var(--green)">Aprovados</div>
+              <div class="stat-value" style="color:var(--green)">2.426</div>
+            </div>
+            <div class="stat-card" style="border-color:var(--yellow-border);background:rgba(245,166,35,0.04)">
+              <div class="stat-label" style="color:var(--yellow)">Pendentes</div>
+              <div class="stat-value" style="color:var(--yellow)">2.179</div>
+            </div>
+            <div class="stat-card" style="border-color:var(--red-border);background:rgba(255,77,106,0.04)">
+              <div class="stat-label" style="color:var(--red)">Rejeitados</div>
+              <div class="stat-value" style="color:var(--red)">1.833</div>
+            </div>
+            <div class="stat-card" style="border-color:rgba(22,106,253,0.25);background:rgba(22,106,253,0.04)">
+              <div class="stat-label" style="color:var(--blue-300)">Ticket Médio</div>
+              <div class="stat-value" style="color:var(--blue-200)">R$ 49,33</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Lista de transações</div>
+        <div class="tx-list" style="margin-top:var(--sp-4)">
+          <div class="tx-item">
+            <div class="tx-icon">💳</div>
+            <div class="tx-info">
+              <div class="tx-name">João Silva</div>
+              <div class="tx-meta">Pix · 14:32 · CPF •••.456.789-••</div>
+            </div>
+            <span class="badge badge-green">Aprovado</span>
+            <div class="tx-amount credit">+ R$ 250,00</div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon" style="background:rgba(245,166,35,0.1);border-color:rgba(245,166,35,0.2)">⏳</div>
+            <div class="tx-info">
+              <div class="tx-name">Maria Fernanda</div>
+              <div class="tx-meta">Pix · 14:28 · CNPJ 12.345.•••/0001-••</div>
+            </div>
+            <span class="badge badge-yellow">Pendente</span>
+            <div class="tx-amount debit">R$ 1.890,00</div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon" style="background:rgba(255,77,106,0.1);border-color:rgba(255,77,106,0.2)">✕</div>
+            <div class="tx-info">
+              <div class="tx-name">Carlos Mendes</div>
+              <div class="tx-meta">Pix · 14:15 · CPF •••.789.012-••</div>
+            </div>
+            <span class="badge badge-red">Rejeitado</span>
+            <div class="tx-amount" style="color:var(--red)">R$ 75,00</div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon">🏪</div>
+            <div class="tx-info">
+              <div class="tx-name">Loja Virtual LTDA</div>
+              <div class="tx-meta">Pix · 13:55 · CNPJ 98.765.•••/0001-••</div>
+            </div>
+            <span class="badge badge-green">Aprovado</span>
+            <div class="tx-amount credit">+ R$ 4.200,00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas canvas-dot-bg" style="margin-top:0">
+        <div class="canvas-label">Modal de saque</div>
+        <div class="modal-backdrop">
+          <div class="modal">
+            <div class="modal-header">
+              <div class="modal-title">Solicitar saque</div>
+              <button class="modal-close" aria-label="Fechar">✕</button>
+            </div>
+            <div class="modal-body">
+              Informe o valor e a chave Pix de destino. Saques são processados em até 10 minutos úteis.
+            </div>
+            <div class="input-group" style="max-width:100%;margin-bottom:var(--sp-4)">
+              <label class="input-label">Valor do saque</label>
+              <input type="text" class="input" placeholder="R$ 0,00">
+            </div>
+            <div class="input-group" style="max-width:100%;margin-bottom:0">
+              <label class="input-label">Chave Pix</label>
+              <input type="text" class="input" placeholder="CPF, CNPJ, e-mail ou telefone">
+            </div>
+            <div class="divider" style="margin:var(--sp-5) 0"></div>
+            <div class="modal-footer">
+              <button class="btn btn-ghost btn-sm">Cancelar</button>
+              <button class="btn btn-primary btn-sm">Confirmar saque</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLES -->
+    <section id="tables" class="ds-section">
+      <div class="ds-eyebrow">Padrões</div>
+      <h2 class="ds-heading"><em>Tabelas</em></h2>
+
+      <div class="canvas">
+        <div class="canvas-label">Transações recentes</div>
+        <div class="table-wrap" style="margin-top:var(--sp-4)">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Método</th>
+                <th>Valor</th>
+                <th>Status</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-mono">tx_xk92mf</td>
+                <td style="color:var(--text-primary);font-weight:500">João Silva</td>
+                <td><span class="badge badge-blue">Pix</span></td>
+                <td style="font-variant-numeric:tabular-nums;color:var(--green)">R$ 250,00</td>
+                <td><span class="badge badge-green">Aprovado</span></td>
+                <td style="color:var(--text-faint)">26/03 14:32</td>
+              </tr>
+              <tr>
+                <td class="td-mono">tx_9j3kp1</td>
+                <td style="color:var(--text-primary);font-weight:500">Maria Fernanda</td>
+                <td><span class="badge badge-blue">Pix</span></td>
+                <td style="font-variant-numeric:tabular-nums">R$ 1.890,00</td>
+                <td><span class="badge badge-yellow">Pendente</span></td>
+                <td style="color:var(--text-faint)">26/03 14:28</td>
+              </tr>
+              <tr>
+                <td class="td-mono">tx_m4n8qr</td>
+                <td style="color:var(--text-primary);font-weight:500">Carlos Mendes</td>
+                <td><span class="badge badge-blue">Pix</span></td>
+                <td style="font-variant-numeric:tabular-nums">R$ 75,00</td>
+                <td><span class="badge badge-red">Rejeitado</span></td>
+                <td style="color:var(--text-faint)">26/03 14:15</td>
+              </tr>
+              <tr>
+                <td class="td-mono">tx_p0v2wx</td>
+                <td style="color:var(--text-primary);font-weight:500">Loja Virtual LTDA</td>
+                <td><span class="badge badge-blue">Pix</span></td>
+                <td style="font-variant-numeric:tabular-nums;color:var(--green)">R$ 4.200,00</td>
+                <td><span class="badge badge-green">Aprovado</span></td>
+                <td style="color:var(--text-faint)">26/03 13:55</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CODE -->
+    <section id="code" class="ds-section">
+      <div class="ds-eyebrow">Padrões</div>
+      <h2 class="ds-heading">Blocos de <em>Código</em></h2>
+
+      <div class="canvas">
+        <div class="canvas-label">Integração API</div>
+        <div class="code-block" style="margin-top:var(--sp-4)">
+          <div class="code-header">
+            <div class="code-dots">
+              <div class="code-dot code-dot-r"></div>
+              <div class="code-dot code-dot-y"></div>
+              <div class="code-dot code-dot-g"></div>
+            </div>
+            <span class="code-filename">pigeon-pix.js</span>
+            <button class="code-copy">Copiar</button>
+          </div>
+          <pre><span class="c-cm">// Inicializar cliente PigeonPag</span>
+<span class="c-kw">import</span> { PigeonPag } <span class="c-kw">from</span> <span class="c-str">'@pigeonpag/sdk'</span>
+
+<span class="c-kw">const</span> pigeon = <span class="c-kw">new</span> <span class="c-fn">PigeonPag</span>({
+  apiKey: <span class="c-str">'pgpag_live_xk92mf...'</span>,
+  environment: <span class="c-str">'production'</span>,
+})
+
+<span class="c-cm">// Criar cobrança Pix</span>
+<span class="c-kw">const</span> charge = <span class="c-kw">await</span> pigeon.pix.<span class="c-fn">create</span>({
+  amount: <span class="c-num">25000</span>,           <span class="c-cm">// centavos (R$ 250,00)</span>
+  description: <span class="c-str">'Pedido #1234'</span>,
+  expiresIn: <span class="c-num">3600</span>,         <span class="c-cm">// segundos</span>
+  customer: {
+    <span class="c-key">name</span>: <span class="c-str">'João Silva'</span>,
+    <span class="c-key">cpf</span>:  <span class="c-str">'123.456.789-00'</span>,
+  },
+})
+
+console.<span class="c-fn">log</span>(charge.qrCode)  <span class="c-cm">// → base64 QR Code</span>
+console.<span class="c-fn">log</span>(charge.copyPaste) <span class="c-cm">// → Pix copia e cola</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <div style="height:var(--sp-16)"></div>
+  </div>
+</main>
+
+<script>
+  // Sidebar scroll spy
+  const sections = document.querySelectorAll('section[id]')
+  const navItems = document.querySelectorAll('.nav-item')
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id')
+        navItems.forEach(item => {
+          item.classList.remove('active')
+          if (item.getAttribute('href') === `#${id}`) {
+            item.classList.add('active')
+          }
+        })
+      }
+    })
+  }, { rootMargin: '-20% 0px -70% 0px' })
+
+  sections.forEach(s => observer.observe(s))
+
+  // Code copy button
+  document.querySelectorAll('.code-copy').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pre = btn.closest('.code-block').querySelector('pre')
+      navigator.clipboard?.writeText(pre.innerText).then(() => {
+        btn.textContent = '✓ Copiado'
+        setTimeout(() => btn.textContent = 'Copiar', 2000)
+      })
+    })
+  })
+</script>
+</body>
+</html>

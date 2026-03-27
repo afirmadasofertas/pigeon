@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Postgres Design System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            /* Neon Tech Exact Palette approximation from the screenshot */
+            --bg-dark: #000000;
+            --bg-card: #0c0c0d;
+            --bg-elevated: #16181D;
+            --bg-mint-light: #F6FDFA;
+            --bg-mint-darker: #E4F1EB;
+            
+            --text-primary: #FFFFFF;
+            --text-secondary: #8FABAB;
+            --text-tertiary: #6b6d73;
+            --text-dark: #000000;
+            
+            --accent-green: #00E5BF; /* The glowing neon green */
+            --accent-green-hover: #00E599;
+            --accent-green-glow: rgba(0, 229, 191, 0.4);
+            
+            --border-color: rgba(255, 255, 255, 0.1);
+            --border-highlight: rgba(255, 255, 255, 0.2);
+            --border-mint: rgba(0, 229, 191, 0.2);
+            
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Ambient Glow Background Effects */
+        .ambient-glow {
+            position: fixed;
+            top: -20vh;
+            right: -10vw;
+            width: 50vw;
+            height: 50vh;
+            background: radial-gradient(circle, rgba(0, 229, 191, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(80px);
+        }
+
+        /* Layout */
+        .sidebar {
+            width: 250px;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            z-index: 50;
+        }
+
+        .sidebar-logo {
+            padding: 0 2rem 2rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-logo span {
+            color: var(--accent-green);
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.75rem 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.03);
+            border-right: 2px solid var(--accent-green);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 4rem;
+            width: calc(100% - 250px);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-weight: 500;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 3rem; margin-top: 3rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        
+        .text-gradient {
+            background: linear-gradient(to right, #FFFFFF, #8FABAB);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.125rem;}
+        .small-text { font-size: 0.875rem; color: var(--text-tertiary); }
+
+        /* Showcase Grid */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Components */
+        
+        /* Pill Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.625rem 1.25rem;
+            border-radius: 9999px; /* Pill shape */
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            cursor: pointer;
+            gap: 8px;
+        }
+
+        .btn-white {
+            background-color: var(--text-primary);
+            color: var(--text-dark);
+        }
+        .btn-white:hover {
+            background-color: #e5e5e5;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        .btn-outline:hover {
+            border-color: var(--border-highlight);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-glow {
+            background-color: transparent;
+            color: var(--accent-green);
+            border-color: var(--accent-green);
+            box-shadow: 0 0 15px rgba(0, 229, 191, 0.2);
+        }
+        .btn-glow:hover {
+            background-color: rgba(0, 229, 191, 0.1);
+            box-shadow: 0 0 20px rgba(0, 229, 191, 0.4);
+        }
+
+        .btn-ghost {
+            color: var(--text-secondary);
+        }
+        .btn-ghost:hover {
+            color: var(--text-primary);
+        }
+
+        /* Tags / Badges */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        .tag-green {
+            border-color: var(--border-mint);
+            background: rgba(0, 229, 191, 0.05);
+            color: var(--accent-green);
+        }
+
+        /* Premium Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--border-highlight);
+        }
+
+        /* Subtle grid background for cards */
+        .card-grid-bg {
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: #d1d5db;
+            overflow-x: auto;
+        }
+        .code-syntax-keyword { color: #34d59a; }
+        .code-syntax-string { color: #8458D0; }
+        .code-syntax-function { color: #EC6F09; }
+
+        /* The Mint Light Section Style */
+        .mint-section {
+            background: var(--bg-mint-light);
+            color: var(--text-dark);
+            padding: 3rem;
+            border-radius: 24px;
+            margin: 2rem 0;
+        }
+        .mint-section h2, .mint-section h3 {
+            color: var(--text-dark);
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+        }
+        .mint-section p {
+            color: #4a5568;
+        }
+
+        /* Forms */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .input {
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 1px var(--accent-green);
+        }
+
+        /* Visual Separators */
+        .hr {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 3rem 0;
+            border: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="ambient-glow"></div>
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <!-- Simplified Neon Logo Mark -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 22H22L12 2Z" stroke="var(--accent-green)" stroke-width="2" stroke-linejoin="round"/>
+                <circle cx="12" cy="15" r="3" fill="var(--accent-green)"/>
+            </svg>
+            Neon <span>Design System</span>
+        </div>
+        <nav>
+            <a href="#typography" class="nav-link active">Typography & Colors</a>
+            <a href="#buttons" class="nav-link">Buttons & Tags</a>
+            <a href="#cards" class="nav-link">Surface & Cards</a>
+            <a href="#sections" class="nav-link">Mint Sections</a>
+            <a href="#forms" class="nav-link">Inputs & Code</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1 class="text-gradient">Design System</h1>
+        <p>Premium dark aesthetics inspired by the Neon.tech database landing page.</p>
+
+        <section id="typography">
+            <h2>Typography & Colors</h2>
+            
+            <div class="showcase-grid">
+                <div>
+                    <h1>H1 Header</h1>
+                    <h3>H3 Subheader</h3>
+                    <p>Standard paragraph text. It uses the Inter font family with a distinct grey-blue hue for secondary information, providing high contrast against the dark background while remaining soft on the eyes.</p>
+                </div>
+                <div>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--bg-dark); border: 1px solid var(--border-color);"></div>
+                        <div><strong style="display:block">Dark Base</strong> <span class="small-text">#000000</span></div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--accent-green);"></div>
+                        <div><strong style="display:block">Accent Green</strong> <span class="small-text">#00E5BF</span></div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--bg-mint-light); border: 1px solid var(--border-color);"></div>
+                        <div><strong style="display:block; color:white">Mint Light</strong> <span class="small-text">#F6FDFA</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="buttons">
+            <h2>Buttons & Tags</h2>
+            <p>Pill-shaped components are a defining characteristic of this interface.</p>
+            
+            <div class="showcase-grid">
+                <div class="card">
+                    <h3>Buttons</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; margin-top: 1.5rem;">
+                        <button class="btn btn-white">Sign Up</button>
+                        <button class="btn btn-outline">Read the docs</button>
+                        <button class="btn btn-glow">Start for free</button>
+                        <button class="btn btn-ghost">Log In -></button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Tags / Labels</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem;">
+                        <span class="tag">Postgres 16</span>
+                        <span class="tag">Vector</span>
+                        <span class="tag tag-green">New Feature</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cards">
+            <h2>Surface & Cards</h2>
+            <p>Cards use a very dark subtly elevated background (`#0c0c0d`) with thin 10% opacity white borders.</p>
+            
+            <div class="showcase-grid">
+                <div class="card card-grid-bg">
+                    <span class="tag mb-2" style="margin-bottom: 1rem;">Architecture</span>
+                    <h3 style="color: white; font-size: 1.25rem;">Speed and scale for agents. And devs.</h3>
+                    <p class="small-text" style="margin-top: 1rem;">Neon is a serverless Postgres built for scale.</p>
+                </div>
+                
+                <div class="card" style="border-top: 2px solid var(--accent-green)">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1.1rem; margin:0;">Database Setup</h3>
+                        <span class="tag tag-green">Live</span>
+                    </div>
+                    <div style="height: 4px; border-radius: 2px; background: var(--border-color); width: 100%; margin: 1rem 0;">
+                        <div style="height: 100%; width: 60%; background: var(--accent-green); border-radius: 2px; box-shadow: 0 0 10px var(--accent-green);"></div>
+                    </div>
+                    <p class="small-text">Provisioning compute... 60%</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="sections">
+            <h2>Mint Light Section</h2>
+            <p>Inverted sections used to highlight specific features or testimonials, breaking the dark mode elegantly.</p>
+            
+            <div class="mint-section">
+                <span class="tag" style="border-color: #cbd5e1; background: transparent; color: #475569; margin-bottom: 1rem;">Feature</span>
+                <h3>Autoscaling compute</h3>
+                <p>Neon automatically scales compute up and down based on your workload, ensuring you only pay for what you use.</p>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <div style="background: white; border-radius: 12px; padding: 1rem; border: 1px solid #e2e8f0; flex: 1;">
+                        <h4 style="font-size: 1rem; font-weight: 600;">Min Compute</h4>
+                        <div style="color: #64748b;">0.25 CU</div>
+                    </div>
+                    <div style="background: white; border-radius: 12px; padding: 1rem; border: 1px solid var(--accent-green); flex: 1; position: relative;">
+                        <div style="position: absolute; top: -10px; right: -10px; background: var(--accent-green); color: black; font-size: 0.6rem; font-weight: bold; padding: 2px 6px; border-radius: 10px;">MAX</div>
+                        <h4 style="font-size: 1rem; font-weight: 600;">Max Compute</h4>
+                        <div style="color: #64748b;">4.00 CU</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="forms">
+            <h2>Inputs & Code Snippets</h2>
+            
+            <div class="showcase-grid">
+                <div class="card">
+                    <h3>Authentication Form</h3>
+                    <div style="margin-top: 1.5rem;">
+                        <div class="input-group">
+                            <label class="label">Work Email</label>
+                            <input type="email" class="input" placeholder="you@company.com">
+                        </div>
+                        <div class="input-group">
+                            <label class="label">Password</label>
+                            <input type="password" class="input" placeholder="••••••••">
+                        </div>
+                        <button class="btn btn-white" style="width: 100%; display:block; text-align:center; margin-top:1rem;">Continue</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Code Block</h3>
+                    <p class="small-text">Used extensively across docs and landing pages.</p>
+                    <div class="code-block" style="margin-top: 1rem;">
+<span class="code-syntax-keyword">const</span> { sql } = <span class="code-syntax-function">require</span>(<span class="code-syntax-string">'@vercel/postgres'</span>);
+
+<span class="code-syntax-keyword">async function</span> <span class="code-syntax-function">getUsers</span>() {
+  <span class="code-syntax-keyword">const</span> { rows } = <span class="code-syntax-keyword">await</span> sql`
+    SELECT * FROM users
+    WHERE active = true;
+  `;
+  <span class="code-syntax-keyword">return</span> rows;
+}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="hr">
+        
+    </main>
+
+    <script>
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
