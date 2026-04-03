@@ -1,22 +1,23 @@
 'use client'
 
 import { useRef } from 'react'
+import CloudflareVideo from '../CloudflareVideo'
 
 const CARDS = [
   {
-    videoSrc: 'https://customer-siyy2ilzb5oakkgv.cloudflarestream.com/71c702c74f0333d8bc3368bbebbb1015/iframe?muted=true&preload=true&loop=true&autoplay=true&poster=https%3A%2F%2Fcustomer-siyy2ilzb5oakkgv.cloudflarestream.com%2F71c702c74f0333d8bc3368bbebbb1015%2Fthumbnails%2Fthumbnail.jpg%3Ftime%3D%26height%3D1080&controls=false',
+    videoId:  '71c702c74f0333d8bc3368bbebbb1015',
     title:    '100% de transparência',
     body:     'Na PigeonPag você tem a confiança de que 100% das transações pix são repassadas corretamente, sem desvio de vendas, sem Med falso e sem reservas inesperadas.',
     featured: false,
   },
   {
-    videoSrc: 'https://customer-siyy2ilzb5oakkgv.cloudflarestream.com/17fd27ed09f9913458cfd1f0e732b1eb/iframe?muted=true&preload=true&loop=true&autoplay=true&poster=https%3A%2F%2Fcustomer-siyy2ilzb5oakkgv.cloudflarestream.com%2F17fd27ed09f9913458cfd1f0e732b1eb%2Fthumbnails%2Fthumbnail.jpg%3Ftime%3D%26height%3D1080&controls=false',
+    videoId:  '17fd27ed09f9913458cfd1f0e732b1eb',
     title:    'Sistema próprio',
     body:     'Diferente da concorrência, não utilizamos white label. Desenvolvemos uma tecnologia própria para otimizar o processamento de pix, resultando em mais rapidez nas transações e zero instabilidades.',
     featured: true,
   },
   {
-    videoSrc: 'https://customer-siyy2ilzb5oakkgv.cloudflarestream.com/aa7362d0d1162839689562b9aa6f6dfb/iframe?muted=true&preload=true&loop=true&autoplay=true&poster=https%3A%2F%2Fcustomer-siyy2ilzb5oakkgv.cloudflarestream.com%2Faa7362d0d1162839689562b9aa6f6dfb%2Fthumbnails%2Fthumbnail.jpg%3Ftime%3D%26height%3D1080&controls=false',
+    videoId:  'aa7362d0d1162839689562b9aa6f6dfb',
     title:    'Para seu negócio',
     body:     'Ideal para Gateways, Bets, Plataforma de Rifa, Plataforma de doação, E-commerce e Saas. Adaptável ao seu fluxo.',
     featured: false,
@@ -109,18 +110,15 @@ const STYLES = `
   }
 `
 
-function Card({ card }: { card: typeof CARDS[number] }) {
+function Card({ card }: { card: (typeof CARDS)[number] }) {
   return (
     <div className="pgn-diff-card" style={{ paddingBottom: '28px', position: 'relative' }}>
       {/* Video — square */}
       <div style={{ position: 'relative', paddingTop: '100%', flexShrink: 0 }}>
-        <iframe
-          src={card.videoSrc}
-          loading="eager"
-          title={card.title}
-          style={{ border: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-          allowFullScreen
+        <CloudflareVideo
+          videoId={card.videoId}
+          objectFit="cover"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
         />
         {/* bottom fade — transparent so text bleeds in seamlessly */}
         <div style={{
