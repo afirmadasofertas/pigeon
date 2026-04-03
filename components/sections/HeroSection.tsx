@@ -93,11 +93,11 @@ const INJECTED_STYLES = `
     .pgn-hero-content { padding-bottom: 72px !important; }
 
     .pgn-hero-video-inner {
-      width: 240% !important;
-      height: 99vw !important;
+      width: 260% !important;
+      height: 107vw !important;
       min-width: unset !important;
       top: auto !important;
-      bottom: 170px !important;
+      bottom: 140px !important;
       left: 50% !important;
       transform: translateX(-50%) !important;
     }
