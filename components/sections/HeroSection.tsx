@@ -82,6 +82,11 @@ const INJECTED_STYLES = `
 
   .pgn-hero-top-fade { display: none; }
 
+  /* ── Mobile overlay ── */
+  @media (max-width: 600px) {
+    .pgn-hero-overlay { opacity: 0.4 !important; }
+  }
+
   /* ── Mobile ── */
   @media (max-width: 600px) {
     .pgn-hero-section { max-height: 600px !important; }
@@ -265,6 +270,7 @@ export default function HeroSection() {
         {/* z-10 ── Dark gradient overlay ───────────────────── */}
         <div
           aria-hidden="true"
+          className="pgn-hero-overlay"
           style={{
             position:      'absolute',
             inset:         0,
