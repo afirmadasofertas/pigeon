@@ -90,10 +90,11 @@ const INJECTED_STYLES = `
        near the bottom text rather than the top. */
     .pgn-hero-video-inner {
       width: 180% !important;
-      height: auto !important;
+      /* height = width × aspect-ratio (0.412) so video fills properly */
+      height: 74vw !important;
       min-width: unset !important;
       top: auto !important;
-      bottom: 300px !important;
+      bottom: 260px !important;
       left: 50% !important;
       transform: translateX(-50%) !important;
     }
