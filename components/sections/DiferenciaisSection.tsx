@@ -1,23 +1,22 @@
 'use client'
 
 import { useRef } from 'react'
-import CloudflareVideo from '../CloudflareVideo'
 
 const CARDS = [
   {
-    videoId:  '71c702c74f0333d8bc3368bbebbb1015',
+    videoSrc: 'https://customer-siyy2ilzb5oakkgv.cloudflarestream.com/71c702c74f0333d8bc3368bbebbb1015/iframe?muted=true&loop=true&autoplay=true&poster=https%3A%2F%2Fcustomer-siyy2ilzb5oakkgv.cloudflarestream.com%2F71c702c74f0333d8bc3368bbebbb1015%2Fthumbnails%2Fthumbnail.jpg%3Ftime%3D%26height%3D600&controls=false',
     title:    '100% de transparência',
     body:     'Na PigeonPag você tem a confiança de que 100% das transações pix são repassadas corretamente, sem desvio de vendas, sem Med falso e sem reservas inesperadas.',
     featured: false,
   },
   {
-    videoId:  '17fd27ed09f9913458cfd1f0e732b1eb',
+    videoSrc: 'https://customer-siyy2ilzb5oakkgv.cloudflarestream.com/17fd27ed09f9913458cfd1f0e732b1eb/iframe?muted=true&loop=true&autoplay=true&poster=https%3A%2F%2Fcustomer-siyy2ilzb5oakkgv.cloudflarestream.com%2F17fd27ed09f9913458cfd1f0e732b1eb%2Fthumbnails%2Fthumbnail.jpg%3Ftime%3D%26height%3D600&controls=false',
     title:    'Sistema próprio',
     body:     'Diferente da concorrência, não utilizamos white label. Desenvolvemos uma tecnologia própria para otimizar o processamento de pix, resultando em mais rapidez nas transações e zero instabilidades.',
     featured: true,
   },
   {
-    videoId:  'aa7362d0d1162839689562b9aa6f6dfb',
+    videoSrc: 'https://customer-siyy2ilzb5oakkgv.cloudflarestream.com/aa7362d0d1162839689562b9aa6f6dfb/iframe?muted=true&loop=true&autoplay=true&poster=https%3A%2F%2Fcustomer-siyy2ilzb5oakkgv.cloudflarestream.com%2Faa7362d0d1162839689562b9aa6f6dfb%2Fthumbnails%2Fthumbnail.jpg%3Ftime%3D%26height%3D600&controls=false',
     title:    'Para seu negócio',
     body:     'Ideal para Gateways, Bets, Plataforma de Rifa, Plataforma de doação, E-commerce e Saas. Adaptável ao seu fluxo.',
     featured: false,
@@ -115,9 +114,11 @@ function Card({ card }: { card: (typeof CARDS)[number] }) {
     <div className="pgn-diff-card" style={{ paddingBottom: '28px', position: 'relative' }}>
       {/* Video — square */}
       <div style={{ position: 'relative', paddingTop: '100%', flexShrink: 0 }}>
-        <CloudflareVideo
-          videoId={card.videoId}
-          objectFit="cover"
+        <iframe
+          src={card.videoSrc}
+          style={{ border: 'none', position: 'absolute', top: 0, left: 0, height: '100%', width: '100%', pointerEvents: 'none' }}
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+          allowFullScreen
         />
         {/* bottom fade — transparent so text bleeds in seamlessly */}
         <div style={{
