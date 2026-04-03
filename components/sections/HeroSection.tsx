@@ -80,32 +80,16 @@ const INJECTED_STYLES = `
   /* ── Nav toggle — hidden on desktop ── */
   .pgn-nav-toggle { display: none; }
 
-  /* ── Mobile top vignette — só aparece em mobile ── */
   .pgn-hero-top-fade { display: none; }
-  @media (max-width: 600px) {
-    .pgn-hero-top-fade {
-      display: block;
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 160px;
-      z-index: 12;
-      background: linear-gradient(to bottom, #020B1D 0%, transparent 100%);
-      pointer-events: none;
-    }
-  }
 
   /* ── Mobile ── */
   @media (max-width: 600px) {
     .pgn-hero-section { max-height: 600px !important; }
     .pgn-hero-content { padding-bottom: 72px !important; }
 
-    /* On mobile portrait the height-based sizing zooms into ~26% of the video.
-       Switch to width-based so the full landscape frame is visible, anchored
-       near the bottom text rather than the top. */
     .pgn-hero-video-inner {
-      width: 180% !important;
-      /* height = width × aspect-ratio (0.412) so video fills properly */
-      height: 74vw !important;
+      width: 210% !important;
+      height: 86vw !important;
       min-width: unset !important;
       top: auto !important;
       bottom: 260px !important;
@@ -304,9 +288,6 @@ export default function HeroSection() {
             pointerEvents: 'none',
           }}
         />
-
-        {/* z-12 ── Mobile top vignette ────────────────────── */}
-        <div aria-hidden="true" className="pgn-hero-top-fade" />
 
         {/* ─── Nav — fixed, follows scroll ─────────────────── */}
         <header
