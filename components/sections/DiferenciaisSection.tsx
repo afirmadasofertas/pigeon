@@ -118,7 +118,6 @@ function Card({ card }: { card: (typeof CARDS)[number] }) {
         <CloudflareVideo
           videoId={card.videoId}
           objectFit="cover"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
         />
         {/* bottom fade — transparent so text bleeds in seamlessly */}
         <div style={{

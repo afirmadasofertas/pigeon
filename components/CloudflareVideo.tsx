@@ -9,15 +9,13 @@
 
 import { useEffect, useRef } from 'react'
 
-const CF_BASE      = 'https://customer-siyy2ilzb5oakkgv.cloudflarestream.com'
-const VIDEOJS_CSS  = 'https://cdnjs.cloudflare.com/ajax/libs/video.js/7.10.2/video-js.min.css'
-const VIDEOJS_JS   = 'https://cdnjs.cloudflare.com/ajax/libs/video.js/7.10.2/video.min.js'
+const CF_BASE     = 'https://customer-siyy2ilzb5oakkgv.cloudflarestream.com'
+const VIDEOJS_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/video.js/7.10.2/video-js.min.css'
+const VIDEOJS_JS  = 'https://cdnjs.cloudflare.com/ajax/libs/video.js/7.10.2/video.min.js'
 
 declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    videojs: any
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  interface Window { videojs: any }
 }
 
 let vjsReady: Promise<void> | null = null
@@ -25,34 +23,55 @@ let vjsReady: Promise<void> | null = null
 function ensureVjs(): Promise<void> {
   if (vjsReady) return vjsReady
   vjsReady = new Promise<void>((resolve, reject) => {
-    // CSS
     if (!document.querySelector(`link[href="${VIDEOJS_CSS}"]`)) {
       const l = document.createElement('link')
       l.rel = 'stylesheet'; l.href = VIDEOJS_CSS
       document.head.appendChild(l)
     }
-    // JS
     if (document.querySelector(`script[src="${VIDEOJS_JS}"]`)) { resolve(); return }
     const s = document.createElement('script')
     s.src = VIDEOJS_JS
-    s.onload = () => resolve()
+    s.onload  = () => resolve()
     s.onerror = reject
     document.head.appendChild(s)
   })
   return vjsReady
 }
 
-function lockMaxQuality(player: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function lockMaxQuality(player: any) {
   try {
     const tech = player.tech({ IWillNotUseThisInPlugins: true })
     const reps = tech?.vhs?.representations?.() ?? []
     if (!reps.length) return
-    // find highest by height, fallback to bandwidth
-    const sorted = [...reps].sort(
-      (a: any, b: any) => ((b.height || b.bandwidth || 0) - (a.height || a.bandwidth || 0)) // eslint-disable-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sorted = [...reps].sort((a: any, b: any) =>
+      (b.height || b.bandwidth || 0) - (a.height || a.bandwidth || 0)
     )
-    reps.forEach((r: any) => r.enabled(r === sorted[0])) // eslint-disable-line @typescript-eslint/no-explicit-any
-  } catch { /* tech not ready yet — will retry on next event */ }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    reps.forEach((r: any) => r.enabled(r === sorted[0]))
+  } catch { /* tech not ready yet */ }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function forceSize(player: any, objectFit: string) {
+  const el = player.el() as HTMLElement | null
+  if (!el) return
+  // Override video-js.min.css defaults (width:300px; height:150px)
+  el.style.width    = '100%'
+  el.style.height   = '100%'
+  el.style.position = 'absolute'
+  el.style.top      = '0'
+  el.style.left     = '0'
+  el.style.right    = '0'
+  el.style.bottom   = '0'
+  const vid = el.querySelector('video') as HTMLVideoElement | null
+  if (vid) {
+    vid.style.width         = '100%'
+    vid.style.height        = '100%'
+    vid.style.objectFit     = objectFit
+    vid.style.pointerEvents = 'none'
+  }
 }
 
 interface Props {
@@ -63,7 +82,7 @@ interface Props {
 }
 
 export default function CloudflareVideo({ videoId, className, style, objectFit = 'cover' }: Props) {
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const videoRef  = useRef<HTMLVideoElement>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const playerRef = useRef<any>(null)
 
@@ -73,7 +92,6 @@ export default function CloudflareVideo({ videoId, className, style, objectFit =
     async function init() {
       await ensureVjs()
       if (cancelled || !videoRef.current) return
-
       const vjs = window.videojs
       if (!vjs || playerRef.current) return
 
@@ -90,32 +108,39 @@ export default function CloudflareVideo({ videoId, className, style, objectFit =
         sources:     [{ src, type: 'application/x-mpegURL' }],
         html5: {
           vhs: {
-            // Advertise a very high bandwidth so VHS selects the top quality tier immediately
-            bandwidth:               99_999_999,
+            bandwidth:                99_999_999,
             enableLowInitialPlaylist: false,
           },
         },
       })
 
-      // Lock to max quality once the manifest is parsed
-      playerRef.current.on('loadedmetadata', () => lockMaxQuality(playerRef.current))
-      // Retry after a short delay (some edge cases)
-      playerRef.current.on('play', () => setTimeout(() => lockMaxQuality(playerRef.current), 500))
+      forceSize(playerRef.current, objectFit)
+      playerRef.current.on('ready',         () => forceSize(playerRef.current, objectFit))
+      playerRef.current.on('loadedmetadata', () => { forceSize(playerRef.current, objectFit); lockMaxQuality(playerRef.current) })
+      playerRef.current.on('play',          () => { forceSize(playerRef.current, objectFit); setTimeout(() => lockMaxQuality(playerRef.current), 500) })
     }
 
     init()
 
     return () => {
       cancelled = true
-      if (playerRef.current) {
-        playerRef.current.dispose()
-        playerRef.current = null
-      }
+      if (playerRef.current) { playerRef.current.dispose(); playerRef.current = null }
     }
-  }, [videoId])
+  }, [videoId, objectFit])
 
   return (
-    <div data-vjs-player className={className} style={style}>
+    <div
+      className={className}
+      style={{
+        position: 'absolute',
+        top:      0,
+        left:     0,
+        right:    0,
+        bottom:   0,
+        overflow: 'hidden',
+        ...style,
+      }}
+    >
       <video
         ref={videoRef}
         className="video-js"
@@ -123,12 +148,6 @@ export default function CloudflareVideo({ videoId, className, style, objectFit =
         playsInline
         loop
         autoPlay
-        style={{
-          width:        '100%',
-          height:       '100%',
-          objectFit,
-          pointerEvents: 'none',
-        }}
       />
     </div>
   )
