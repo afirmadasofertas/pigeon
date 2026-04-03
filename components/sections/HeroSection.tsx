@@ -92,7 +92,7 @@ const INJECTED_STYLES = `
       height: 86vw !important;
       min-width: unset !important;
       top: auto !important;
-      bottom: 260px !important;
+      bottom: 180px !important;
       left: 50% !important;
       transform: translateX(-50%) !important;
     }
