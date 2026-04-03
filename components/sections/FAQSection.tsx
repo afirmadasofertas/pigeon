@@ -249,7 +249,7 @@ export default function FAQSection() {
         </ul>
 
         <div className="pgn-faq-cta-wrap">
-          <a href="#integrar" className="pgn-faq-btn">
+          <a href="https://app.pigeonpag.com/login" className="pgn-faq-btn">
             <span className="pgn-faq-btn-shine" aria-hidden="true" />
             Integrar agora
             <svg width="7" height="7" viewBox="0 0 7 7" fill="none" aria-hidden="true"

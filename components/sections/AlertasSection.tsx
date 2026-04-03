@@ -291,7 +291,7 @@ export default function AlertasSection() {
             levar os bancos a emitirem alertas de golpe nas transações,
             garantindo uma maior conversão.
           </p>
-          <a href="#integrar" className="pgn-alt-btn">
+          <a href="https://app.pigeonpag.com/login" className="pgn-alt-btn">
             <span className="pgn-alt-btn-shine" aria-hidden="true" />
             Integrar agora
             <svg width="7" height="7" viewBox="0 0 7 7" fill="none" aria-hidden="true"

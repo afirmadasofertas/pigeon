@@ -20,8 +20,8 @@ const GOOD = [
   'Taxas justas',
 ]
 
-// bg: #000D18 → #F0F6FF
-const BG_A = [0, 13, 24]
+// bg: #020B1D → #F0F6FF
+const BG_A = [2, 11, 29]
 const BG_B = [240, 246, 255]
 
 // neutral text: white → #0d1a2e
@@ -128,7 +128,7 @@ export default function ComparacaoSection() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #000D18;
+          background-color: #020B1D;
           will-change: background-color;
           overflow: hidden;
         }

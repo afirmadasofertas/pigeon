@@ -1,5 +1,6 @@
 'use client'
 
+import HeroVideo from '../HeroVideo'
 import { type CSSProperties, useState, useEffect, useRef } from 'react'
 
 /* ─────────────────────────────────────────────────────────────
@@ -248,7 +249,7 @@ export default function HeroSection() {
           aria-hidden="true"
           style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}
         >
-          <div
+          <HeroVideo
             className="pgn-hero-video-inner"
             style={{
               position:  'absolute',
@@ -259,22 +260,7 @@ export default function HeroSection() {
               width:     'calc(100svh / 0.412037037037037)',
               minWidth:  '100%',
             }}
-          >
-            <div style={{ position: 'relative', paddingTop: '41.2037037037037%' }}>
-              <iframe
-                src="https://customer-siyy2ilzb5oakkgv.cloudflarestream.com/65816f4b1fe652ade9d452b7043638e3/iframe?muted=true&preload=true&loop=true&autoplay=true&poster=https%3A%2F%2Fcustomer-siyy2ilzb5oakkgv.cloudflarestream.com%2F65816f4b1fe652ade9d452b7043638e3%2Fthumbnails%2Fthumbnail.jpg%3Ftime%3D%26height%3D1080&controls=false"
-                loading="eager"
-                title="PigeonPag hero video"
-                style={{
-                  border: 'none', position: 'absolute',
-                  top: 0, left: 0, height: '100%', width: '100%',
-                  pointerEvents: 'none',
-                }}
-                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          </div>
+          />
         </div>
 
         {/* z-10 ── Dark gradient overlay ───────────────────── */}
@@ -465,7 +451,7 @@ export default function HeroSection() {
           {/* 4 ── CTA Button */}
           <div style={fadeUp(0.65)}>
             <a
-              href="#criar-conta"
+              href="https://app.pigeonpag.com/login"
               className="pgn-cta"
               style={{
                 position:       'relative',
@@ -525,24 +511,10 @@ export default function HeroSection() {
         >
           <div
             style={{
-              display:       'flex',
-              flexDirection: 'column',
-              alignItems:    'center',
-              gap:           '6px',
-              color:         'rgba(255,255,255,0.35)',
-              animation:     'pgn-bounce 1.6s ease-in-out 1.6s infinite',
+              color:     'rgba(255,255,255,0.35)',
+              animation: 'pgn-bounce 1.6s ease-in-out 1.6s infinite',
             }}
           >
-            <span
-              style={{
-                fontSize:      'var(--ds-font-size-overline)',
-                fontWeight:    'var(--ds-font-weight-medium)',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-              }}
-            >
-              scroll
-            </span>
             <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M1 1L7 7L13 1"

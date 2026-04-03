@@ -7,12 +7,6 @@ const PigeonLogo = () => (
   </svg>
 )
 
-const IconX = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <path d="M12.6 1H14.9L9.9 6.8L15.8 15H11.2L7.6 10.2L3.5 15H1.2L6.5 8.8L0.9 1H5.6L8.9 5.4L12.6 1ZM11.8 13.6H13.1L4.9 2.4H3.5L11.8 13.6Z" fill="currentColor"/>
-  </svg>
-)
-
 const IconInstagram = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
     <rect x="1.5" y="1.5" width="13" height="13" rx="4" stroke="currentColor" strokeWidth="1.4"/>
@@ -21,14 +15,6 @@ const IconInstagram = () => (
   </svg>
 )
 
-const IconLinkedIn = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" strokeWidth="1.4"/>
-    <line x1="4.5" y1="6.5" x2="4.5" y2="11.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-    <circle cx="4.5" cy="4.5" r="0.8" fill="currentColor"/>
-    <path d="M7.5 11.5V8.5C7.5 7.4 8.2 6.5 9.2 6.5C10.2 6.5 11 7.4 11 8.5V11.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-  </svg>
-)
 
 const LINKS = [
   {
@@ -43,7 +29,7 @@ const LINKS = [
   {
     label: 'Empresa',
     items: [
-      { name: 'Integrar agora', href: '#integrar' },
+      { name: 'Integrar agora', href: 'https://app.pigeonpag.com/login' },
       { name: 'Contato',        href: '#contato' },
       { name: 'Termos de Uso',  href: '#termos' },
       { name: 'Privacidade',    href: '#privacidade' },
@@ -220,12 +206,6 @@ export default function Footer() {
             <div className="pgn-footer-social">
               <a href="#" className="pgn-footer-social-btn" aria-label="Instagram">
                 <IconInstagram />
-              </a>
-              <a href="#" className="pgn-footer-social-btn" aria-label="LinkedIn">
-                <IconLinkedIn />
-              </a>
-              <a href="#" className="pgn-footer-social-btn" aria-label="X / Twitter">
-                <IconX />
               </a>
             </div>
           </div>

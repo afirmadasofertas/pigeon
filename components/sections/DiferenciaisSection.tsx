@@ -188,7 +188,7 @@ export default function DiferenciaisSection() {
         <div className="pgn-diff-card-wrap pgn-diff-col-featured" style={{'--card-delay': '0.12s', display: 'flex', flexDirection: 'column', gap: '20px'} as React.CSSProperties}>
           <Card card={CARDS[1]} />
           <div className="pgn-diff-cta-mid" style={{ display: 'flex' }}>
-            <a href="#criar-conta" className="pgn-diff-cta" style={{ width: '100%', justifyContent: 'center' }}>
+            <a href="https://app.pigeonpag.com/login" className="pgn-diff-cta" style={{ width: '100%', justifyContent: 'center' }}>
               <span className="pgn-diff-shine" aria-hidden="true" />
               Criar conta agora
               <svg className="pgn-diff-arrow" width="7" height="7" viewBox="0 0 7 7" fill="none" aria-hidden="true">
@@ -204,7 +204,7 @@ export default function DiferenciaisSection() {
 
       {/* Mobile-only button — below all cards */}
       <div className="pgn-diff-cta-bottom" style={{ display: 'none', maxWidth: '1100px', margin: '20px auto 0', paddingInline: 'clamp(16px,4vw,24px)' }}>
-        <a href="#criar-conta" className="pgn-diff-cta" style={{ width: '100%', justifyContent: 'center' }}>
+        <a href="https://app.pigeonpag.com/login" className="pgn-diff-cta" style={{ width: '100%', justifyContent: 'center' }}>
           <span className="pgn-diff-shine" aria-hidden="true" />
           Criar conta agora
           <svg className="pgn-diff-arrow" width="7" height="7" viewBox="0 0 7 7" fill="none" aria-hidden="true">

@@ -40,10 +40,10 @@
   --ds-tracking-overline:  0.2em;
 
   /* ── Colors: background ───────────────────────────────── */
-  --ds-color-bg-base:     #000D18;
-  --ds-color-bg-surface:  #010F22;
-  --ds-color-bg-elevated: #061829;
-  --ds-color-bg-overlay:  #0A1F35;
+  --ds-color-bg-base:     #020B1D;
+  --ds-color-bg-surface:  #03112A;
+  --ds-color-bg-elevated: #071930;
+  --ds-color-bg-overlay:  #0B2038;
   --ds-color-bg-hover:    rgba(22, 106, 253, 0.06);
 
   /* ── Colors: brand blue ───────────────────────────────── */
