@@ -93,8 +93,8 @@ const INJECTED_STYLES = `
     .pgn-hero-content { padding-bottom: 72px !important; }
 
     .pgn-hero-video-inner {
-      width: 260% !important;
-      height: 107vw !important;
+      width: 300% !important;
+      height: 124vw !important;
       min-width: unset !important;
       top: auto !important;
       bottom: 140px !important;
