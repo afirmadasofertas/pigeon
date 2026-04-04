@@ -89,7 +89,7 @@ const INJECTED_STYLES = `
 
   /* ── Mobile ── */
   @media (max-width: 600px) {
-    .pgn-hero-section { max-height: 600px !important; }
+    .pgn-hero-section { max-height: 800px !important; }
     .pgn-hero-content { padding-bottom: 72px !important; }
 
     .pgn-hero-video-inner {
